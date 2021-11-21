@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/teacher"
+    app:startDestination="@id/teacherTabFragment">
+
+    <fragment
+        android:id="@+id/teacherTabFragment"
+        android:name="com.example.quiz.ui.fragment.TeacherTabFragment"
+        android:label="fragment_teacher_tab"
+        tools:layout="@layout/fragment_teacher_tab" />
+</navigation>
