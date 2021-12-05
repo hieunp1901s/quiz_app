@@ -15,12 +15,8 @@ import com.example.quiz.models.Test;
 import com.example.quiz.util.CalculatingTimerForTest;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+
 
 public class JoinTestsAdapter extends RecyclerView.Adapter<JoinTestsAdapter.JoinTestsViewHolder> {
     private ArrayList<Test> joinTests;
@@ -49,7 +45,7 @@ public class JoinTestsAdapter extends RecyclerView.Adapter<JoinTestsAdapter.Join
 
             calculatingTimerForTest = new CalculatingTimerForTest(joinTests.get(index));
             if (calculatingTimerForTest.getResult() > 0) {
-                binding.ivIcon.setImageResource(R.drawable.test_available);
+                binding.ivIcon.setImageResource(R.mipmap.test_icon_available);
             }
 
             binding.getRoot().setOnClickListener(new View.OnClickListener() {

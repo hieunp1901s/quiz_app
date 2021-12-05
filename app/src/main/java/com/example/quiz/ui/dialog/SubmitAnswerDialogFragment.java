@@ -55,6 +55,7 @@ public class SubmitAnswerDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 firebaseViewModel.submitAnswerToRepoFirebase(answer, questionViewModel.getTest().getValue().getTestID());
+                questionViewModel.getCancelTimer().setValue(true);
                 Objects.requireNonNull(getDialog()).dismiss();
                 Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
             }

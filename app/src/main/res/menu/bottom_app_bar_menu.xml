@@ -2,19 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/student"
-        android:title="studentTab"
+        android:title="Joined test"
         android:icon="@drawable/ic_home"
         android:color="#FFFFFF"
         app:showAsAction="always"/>
 
     <item android:id="@+id/teacher"
-        android:title="teacherTab"
+        android:title="Your test"
         android:icon="@drawable/ic_school"
-
         app:showAsAction="always"/>
 
     <item android:id="@+id/account"
-        android:title="accountTab"
+        android:title="Account"
         android:icon="@drawable/ic_account"
         app:showAsAction="always"/>
 

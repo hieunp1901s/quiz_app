@@ -1,9 +1,5 @@
 package com.example.quiz.models;
 
-import android.util.Log;
-
-import com.example.quiz.models.Question;
-
 import java.util.ArrayList;
 
 public class Test {
@@ -13,6 +9,7 @@ public class Test {
     String duration;
     String date;
     String testID;
+    String mix;
     int count = 0;
 
     public Test(){
@@ -66,5 +63,23 @@ public class Test {
 
     public ArrayList<Question> getListQuestion() {
         return listQuestion;
+    }
+
+    public void setMix(String mix) {
+        this.mix = mix;
+    }
+
+    public String getMix() {return this.mix;}
+
+    public void setListQuestion(ArrayList<Question> listQuestion) {
+        this.listQuestion = listQuestion;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

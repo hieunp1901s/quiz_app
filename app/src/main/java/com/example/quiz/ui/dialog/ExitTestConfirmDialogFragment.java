@@ -10,10 +10,12 @@ import android.view.Window;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.quiz.R;
 import com.example.quiz.databinding.FragmentExitTestConfirmDialogBinding;
+import com.example.quiz.viewmodels.QuestionViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +28,7 @@ public class ExitTestConfirmDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentExitTestConfirmDialogBinding.inflate(getLayoutInflater());
+        QuestionViewModel questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
 
         Dialog builder = new Dialog(getActivity());
         builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -43,6 +46,7 @@ public class ExitTestConfirmDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Objects.requireNonNull(getDialog()).dismiss();
+                questionViewModel.getCancelTimer().setValue(true);
                 Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
             }
         });

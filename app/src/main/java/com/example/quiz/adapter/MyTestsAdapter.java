@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class MyTestsAdapter extends RecyclerView.Adapter<MyTestsAdapter.MyTestsViewHolder> {
     private ArrayList<Test> myTests;
     TeacherTabFragmentItemClicked itemClicked;
+
     public MyTestsAdapter(ArrayList<Test> myTests, TeacherTabFragmentItemClicked itemClicked) {
         this.myTests = myTests;
         this.itemClicked = itemClicked;

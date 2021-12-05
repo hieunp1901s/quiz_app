@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="544dp"
         android:background="@drawable/alert_dialog"
         android:orientation="vertical">
 
@@ -28,6 +28,7 @@
             android:textColor="#009688"
             android:textColorHint="#B3119E9D"
             android:textSize="14sp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +49,7 @@
             android:textColor="#009688"
             android:textColorHint="#B3119E9D"
             android:textSize="14sp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -114,17 +116,17 @@
             android:layout_width="110dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
             android:layout_marginBottom="20dp"
             android:layout_weight="1"
             android:background="@drawable/login_button_selector"
             android:text="CANCEL"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etDate"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/cbMix"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/btnConfirmAddTest"
@@ -135,12 +137,13 @@
             android:layout_weight="1"
             android:background="@drawable/login_button_selector"
             android:text="CONFIRM"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/btnCancelAddTest"
             app:layout_constraintTop_toBottomOf="@+id/etDate"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.661" />
 
         <TextView
             android:id="@+id/textView10"
@@ -185,6 +188,18 @@
             android:textColor="#453E3E"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etDuration" />
+
+        <CheckBox
+            android:id="@+id/cbMix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Mix question and answer"
+            android:textColor="#453E3E"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etDate" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

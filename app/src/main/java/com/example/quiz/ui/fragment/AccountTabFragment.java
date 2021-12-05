@@ -1,18 +1,14 @@
 package com.example.quiz.ui.fragment;
 
-import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.quiz.R;
 import com.example.quiz.ui.dialog.ConfirmLogoutDialogFragment;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 import com.example.quiz.databinding.FragmentAccountTabBinding;
@@ -76,8 +72,6 @@ public class AccountTabFragment extends Fragment {
         binding.layoutLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                firebaseViewModel.getUserInfo().setValue(null);
-//                firebaseViewModel.logOut();
                 DialogFragment dialogFragment = new ConfirmLogoutDialogFragment();
                 dialogFragment.setCancelable(false);
                 dialogFragment.show(getParentFragmentManager(), "confirm logout");

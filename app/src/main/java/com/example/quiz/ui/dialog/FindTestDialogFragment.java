@@ -44,45 +44,37 @@ public class FindTestDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentFindTestDialogBinding.inflate(inflater, container, false);
-
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
+
+        firebaseViewModel.getFindTestResult().observe(getViewLifecycleOwner(), new Observer<Test>() {
+            @Override
+            public void onChanged(Test test) {
+                if (test!= null) {
+                    binding.tvTestName.setText("Test name:" + test.getTestName());
+                    binding.tvTime.setText("Duration:" + test.getDuration() + " minutes");
+                    binding.tvNumberOfQuestions.setText(test.getListQuestion().size() + " questions");
+                }
+
+            }
+        });
 
         binding.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                firebaseViewModel.getFindTestResult().setValue(null);
                 getDialog().dismiss();
             }
         });
-        binding.btnFind.setOnClickListener(new View.OnClickListener() {
+
+        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (binding.etFind.getText().toString().equals(""))
-                    Toast.makeText(getContext(), "Please enter test ID", Toast.LENGTH_LONG).show();
-                else {
-                    firebaseViewModel.findTestFromFirebase(binding.etFind.getText().toString());
-                }
-
-            }
-        });
-
-        firebaseViewModel.getFindTestResult().observe(requireActivity(), new Observer<Test>() {
-            @Override
-            public void onChanged(Test test) {
-                if (test != null) {
-                    binding.tvTestName.setText(test.getTestName());
-                    binding.tvTime.setText(test.getDuration());
-                    binding.tvNumberOfQuestions.setText(test.getListQuestion().size() + "");
-                }
-            }
-        });
-
-        binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseViewModel.addTestToRepoFirebase(binding.etFind.getText().toString(), "joinTests");
+                firebaseViewModel.addTestToRepoFirebase(firebaseViewModel.getFindTestResult().getValue().getTestID(), "joinTests");
+                firebaseViewModel.getFindTestResult().setValue(null);
                 getDialog().dismiss();
             }
         });
+
         return binding.getRoot();
     }
 }

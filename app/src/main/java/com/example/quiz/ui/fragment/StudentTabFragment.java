@@ -9,8 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +83,7 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
 
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvJoinTests.setLayoutManager(layoutManager);
         JoinTestsAdapter joinTestsAdapter = new JoinTestsAdapter(firebaseViewModel.getListJoinTest(), this::onItemClicked);

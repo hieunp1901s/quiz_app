@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -12,11 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-
-import com.example.quiz.R;
 import com.example.quiz.databinding.FragmentJoinConfirmDialogBinding;
 import com.example.quiz.models.Test;
 import com.example.quiz.util.CalculatingTimerForTest;
@@ -25,6 +21,10 @@ import com.example.quiz.viewmodels.QuestionViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 public class JoinTestConfirmDialogFragment extends DialogFragment {
@@ -56,9 +56,13 @@ public class JoinTestConfirmDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (calculatingTimerForTest.getResult() > 0) {
+//                    firebaseViewModel.getProgressing().setValue(true);
+
+                    //prepare data for test
                     questionViewModel.getTest().setValue(test);
                     questionViewModel.getTimer().setValue(calculatingTimerForTest.getResult());
                     questionViewModel.getParticipantName().setValue(binding.etName.getText().toString());
+                    questionViewModel.getCancelTimer().setValue(false);
                     Objects.requireNonNull(getDialog()).dismiss();
 
                 }

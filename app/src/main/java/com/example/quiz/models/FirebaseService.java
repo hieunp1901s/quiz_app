@@ -1,12 +1,10 @@
 package com.example.quiz.models;
 
-import java.util.ArrayList;
-import java.util.Map;
+
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
+
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -33,5 +31,11 @@ public interface FirebaseService {
 
     @PUT("/answers/{testID}/{answerID}.json")
     Call<Void> submitAnswer(@Path("testID") String testID, @Path("answerID") String answerID, @Body Answer answer);
+
+    @PUT("/chatroom/{testID}/{admin}.json")
+    Call<Void> createChatRoom(@Path("testID") String testID, @Path("admin") String admin, @Body String adminID);
+
+    @POST("/chatroom/{testID}.json")
+    Call<Void> sendMessage(@Path("testID") String testID, @Body Message message);
 
 }

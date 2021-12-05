@@ -141,6 +141,10 @@ public class AddTestDialogFragment extends DialogFragment {
                     test.setStartTime(binding.tvTimeStart.getText().toString());
                     test.setDuration(binding.etDuration.getText().toString());
                     test.setDate(binding.etDate.getText().toString());
+                    if (binding.cbMix.isChecked())
+                        test.setMix("true");
+                    else
+                        test.setMix("false");
                     FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
                     firebaseViewModel.addTestFirebase(test);
                     Objects.requireNonNull(getDialog()).dismiss();

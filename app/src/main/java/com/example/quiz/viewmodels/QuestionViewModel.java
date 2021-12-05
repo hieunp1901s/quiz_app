@@ -11,12 +11,14 @@ public class QuestionViewModel extends ViewModel {
     private MutableLiveData<Long> timer;
     private MutableLiveData<Integer> navIndex;
     private MutableLiveData<String> participantName;
+    private MutableLiveData<Boolean> cancelTimer;
 
     public QuestionViewModel() {
         test = new MutableLiveData<>();
         timer = new MutableLiveData<>();
         navIndex = new MutableLiveData<>();
         participantName = new MutableLiveData<>();
+        cancelTimer = new MutableLiveData<>();
     }
 
     public MutableLiveData<Test> getTest() {
@@ -32,5 +34,7 @@ public class QuestionViewModel extends ViewModel {
     }
 
     public MutableLiveData<String> getParticipantName() {return participantName;}
+
+    public MutableLiveData<Boolean> getCancelTimer() {return cancelTimer;}
 
 }

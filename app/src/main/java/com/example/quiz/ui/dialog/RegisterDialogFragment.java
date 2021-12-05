@@ -4,11 +4,10 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+
 import android.view.Window;
-import android.widget.LinearLayout;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,9 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.quiz.R;
 import com.example.quiz.databinding.FragmentRegisterDialogBinding;
-import com.example.quiz.models.LoginFragmentItemClicked;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 
 import org.jetbrains.annotations.NotNull;

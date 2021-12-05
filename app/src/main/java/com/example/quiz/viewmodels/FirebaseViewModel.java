@@ -1,13 +1,14 @@
 package com.example.quiz.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quiz.models.Answer;
+import com.example.quiz.models.ChatRoom;
+import com.example.quiz.models.Message;
 import com.example.quiz.models.Test;
 import com.example.quiz.models.User;
 import com.example.quiz.repositories.FirebaseRepository;
@@ -19,37 +20,11 @@ import java.util.ArrayList;
 
 public class FirebaseViewModel extends AndroidViewModel {
     private FirebaseRepository firebaseRepository;
-    private FirebaseUser user;
-    private MutableLiveData<User> userInfo;
-    private MutableLiveData<Integer> logInState;
-    private MutableLiveData<Test> findTestResult;
-    private MutableLiveData<Boolean> progressing;
-
-    private ArrayList<Test> listJoinTest;
-    private MutableLiveData<Integer> updateJoinTest;
-
-    private ArrayList<Test> listMyTest;
-    private MutableLiveData<Integer> updateMyTest;
-
-    private MutableLiveData<Integer> checkAnswerSubmitted;
 
     public FirebaseViewModel(@NonNull @NotNull Application application) {
         super(application);
-
         firebaseRepository = new FirebaseRepository(application);
-        user = firebaseRepository.getUser();
-        userInfo = firebaseRepository.getUserInfo();
-        findTestResult = firebaseRepository.getFindTestResult();
-        logInState = firebaseRepository.getLogInState();
-        progressing = firebaseRepository.getProgressing();
 
-        listJoinTest = firebaseRepository.getListJoinTest();
-        updateJoinTest = firebaseRepository.getUpdateJoinTest();
-
-        listMyTest = firebaseRepository.getListMyTest();
-        updateMyTest = firebaseRepository.getUpdateMyTest();
-
-        checkAnswerSubmitted = firebaseRepository.getCheckAnswerSubmitted();
     }
 
     public void login(String email, String password) {
@@ -63,22 +38,19 @@ public class FirebaseViewModel extends AndroidViewModel {
         firebaseRepository.logOut();
     }
 
-    public FirebaseUser getUser() {return user;}
+    public FirebaseUser getUser() {return firebaseRepository.getUser();}
 
-    public MutableLiveData<User> getUserInfo() {return userInfo;}
+    public MutableLiveData<User> getUserInfo() {return firebaseRepository.getUserInfo();}
 
-    public MutableLiveData<Integer> getLogInState() {return logInState;}
+    public MutableLiveData<Integer> getLogInState() {return firebaseRepository.getLogInState();}
 
-    public MutableLiveData<Test> getFindTestResult() {return findTestResult;}
+    public MutableLiveData<Test> getFindTestResult() {return firebaseRepository.getFindTestResult();}
 
     public void addTestFirebase(Test test) {
         firebaseRepository.addTestFirebase(test);
     }
 
-    public MutableLiveData<Boolean> getProgressing() {return progressing;}
-
-
-
+    public MutableLiveData<Boolean> getProgressing() {return firebaseRepository.getProgressing();}
 
     public void findTestFromFirebase(String id) {
         firebaseRepository.findTestFromFirebase(id);
@@ -92,27 +64,70 @@ public class FirebaseViewModel extends AndroidViewModel {
         firebaseRepository.submitAnswerToRepoFirebase(answer, testID);
     }
 
-
-
     public ArrayList<Test> getListJoinTest() {
-        return listJoinTest;
+        return firebaseRepository.getListJoinTest();
     }
 
     public MutableLiveData<Integer> getUpdateJoinTest() {
-        return updateJoinTest;
+        return firebaseRepository.getUpdateJoinTest();
     }
 
     public ArrayList<Test> getListMyTest() {
-        return listMyTest;
+        return firebaseRepository.getListMyTest();
     }
 
     public MutableLiveData<Integer> getUpdateMyTest() {
-        return updateMyTest;
+        return firebaseRepository.getUpdateMyTest();
     }
 
-    public MutableLiveData<Integer> getCheckAnswerSubmitted() {return  checkAnswerSubmitted;}
+    public MutableLiveData<Integer> getCheckAnswerSubmitted() {return firebaseRepository.getCheckAnswerSubmitted();}
+
+    public MutableLiveData<String> getCurrentChatRoomID() {return firebaseRepository.getCurrentChatRoomID();}
 
     public void checkIfAnswerSubmitted(String testID) {
         firebaseRepository.checkIfAnswerSubmitted(testID);
     }
+
+    public ArrayList<Answer> getListAnswer() {
+        return firebaseRepository.getListAnswer();
+    }
+
+    public MutableLiveData<Boolean> getFinishGetResult() {
+        return firebaseRepository.getFinishGetResult();
+    }
+
+    public void getTestResult(String testID) {
+        firebaseRepository.getTestResult(testID);
+    }
+
+    public void deleteTest(String testID) {firebaseRepository.deleteTest(testID);}
+
+    public void sendMessage(String testID, Message message) {
+        firebaseRepository.sendMessage(testID, message);
+    }
+
+    public ArrayList<Message> getMessages() {return firebaseRepository.getMessages();}
+
+    public void initCurrentChatRoom(String testID) {
+        firebaseRepository.initCurrentChatRoom(testID);
+    }
+
+    public void removeCurrentChatRoomListener(String testID) {
+        firebaseRepository.removeCurrentChatRoomListener(testID);
+    }
+
+    public MutableLiveData<Integer> getUpdateChatRoom() {
+        return firebaseRepository.getUpdateChatRoom();
+    }
+
+    public MutableLiveData<Boolean> getIsFindTestResultNull() {return firebaseRepository.getIsFindTestResultNull();}
+
+    public MutableLiveData<Integer> getNotification() {return firebaseRepository.getNotification();}
+
+    public void removeNewNotification(String testID) {firebaseRepository.removeNewNotification(testID);}
+
+    public ArrayList<ChatRoom> getListChatRoom() {return firebaseRepository.getListChatRoom();}
+
+    public ArrayList<String> getNewNotification() {return firebaseRepository.getNewNotification();}
+
 }

@@ -53,4 +53,16 @@ public class Question {
     public String getCorrectAnswer() {
         return correctAnswer;
     }
+
+    public String getAnswer(int number) {
+        if (number == 1)
+            return answer_1;
+        else if (number == 2)
+            return answer_2;
+        else if (number == 3)
+            return answer_3;
+        else if (number == 4)
+            return answer_4;
+        return "";
+    }
 }

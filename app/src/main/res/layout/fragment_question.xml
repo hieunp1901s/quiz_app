@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.fragment.QuestionFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:elevation="2dp"
                 android:src="@drawable/ic_back"
                 android:visibility="visible"
                 app:tint="#74708e" />
@@ -35,9 +37,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
+                android:elevation="2dp"
                 android:gravity="center"
                 android:text="English for beginner"
-                android:textColor="#74708e"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="visible" />
@@ -48,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:elevation="2dp"
                 android:src="@drawable/ic_list"
                 app:tint="#74708e" />
         </LinearLayout>
@@ -75,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:padding="5dp"
-                    android:text="Question 6/15"
+
                     android:textColor="#FFC107"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -86,7 +89,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:padding="5dp"
-                    android:text="Motor racing is ..... sport in the world                    "
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -103,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/radio_selector"
+                    android:elevation="2dp"
                     android:padding="5dp"
                     android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
@@ -115,6 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/radio_selector"
+                    android:elevation="2dp"
                     android:padding="5dp"
                     android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
@@ -127,6 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/radio_selector"
+                    android:elevation="2dp"
                     android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
                     android:textSize="18sp"
@@ -138,6 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/radio_selector"
+                    android:elevation="2dp"
                     android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
                     android:textSize="18sp"
@@ -163,7 +169,9 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="#8d83b6"
+                android:elevation="2dp"
                 android:text="Prev"
+                android:textColor="@color/white"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <Button
@@ -173,7 +181,9 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="#8d83b6"
+                android:elevation="2dp"
                 android:text="Submit"
+                android:textColor="@color/white"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <Button
@@ -183,7 +193,9 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="#8d83b6"
+                android:elevation="2dp"
                 android:text="Next"
+                android:textColor="@color/white"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
         </LinearLayout>
@@ -192,6 +204,7 @@
             android:id="@+id/tvTimer"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:elevation="2dp"
             android:gravity="center"
             android:text="TextView"
             android:visibility="visible"

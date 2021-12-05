@@ -49,6 +49,7 @@
         android:id="@+id/rvMyTests"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#efefef"
         android:layout_marginTop="70dp" />
 
     <TextView
@@ -68,4 +69,5 @@
         android:layout_marginTop="40dp"
         android:layout_marginStart="10dp"
         android:textStyle="bold" />
+
 </FrameLayout>
