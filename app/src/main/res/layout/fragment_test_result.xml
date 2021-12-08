@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.TestResultFragment">
+    tools:context=".ui.fragment.TestResultFragment"
+    android:fitsSystemWindows="true">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -24,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="ID"
+            android:text="@string/id"
             android:textColor="@color/white"
             android:textSize="13sp" />
 
@@ -36,7 +37,8 @@
             android:gravity="center_horizontal"
             android:text="NAME"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/textView17"
@@ -44,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:gravity="center_horizontal"
-            android:text="TIME FINISH"
+            android:text="@string/time_finish"
             android:textColor="@color/white"
             android:textSize="13sp" />
 
@@ -54,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:gravity="center_horizontal"
-            android:text="DURATION"
+            android:text="@string/duration"
             android:textColor="@color/white"
             android:textSize="13sp" />
 
@@ -64,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:gravity="center_horizontal"
-            android:text="SCORE"
+            android:text="@string/score"
             android:textColor="@color/white"
             android:textSize="13sp" />
     </LinearLayout>

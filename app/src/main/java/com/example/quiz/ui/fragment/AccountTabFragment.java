@@ -4,14 +4,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.quiz.ui.dialog.ConfirmLogoutDialogFragment;
-import com.example.quiz.viewmodels.FirebaseViewModel;
 import com.example.quiz.databinding.FragmentAccountTabBinding;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,15 +20,10 @@ import com.example.quiz.databinding.FragmentAccountTabBinding;
  */
 public class AccountTabFragment extends Fragment {
     FragmentAccountTabBinding binding;
-    private FirebaseViewModel firebaseViewModel;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public AccountTabFragment() {
         // Required empty public constructor
@@ -56,26 +51,23 @@ public class AccountTabFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            // TODO: Rename and change types of parameters
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAccountTabBinding.inflate(inflater, container, false);
 
-        binding.layoutLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dialogFragment = new ConfirmLogoutDialogFragment();
-                dialogFragment.setCancelable(false);
-                dialogFragment.show(getParentFragmentManager(), "confirm logout");
-            }
+        binding.layoutLogout.setOnClickListener(v -> {
+            DialogFragment dialogFragment = new ConfirmLogoutDialogFragment();
+            dialogFragment.setCancelable(false);
+            dialogFragment.show(getParentFragmentManager(), "confirm logout");
         });
         return binding.getRoot();
     }

@@ -3,7 +3,6 @@ package com.example.quiz.viewmodels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.quiz.models.Answer;
 import com.example.quiz.models.Test;
 
 public class QuestionViewModel extends ViewModel {

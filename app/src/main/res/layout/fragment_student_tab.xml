@@ -22,13 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="There is no test"
+        android:text="@string/there_is_no_test"
         android:visibility="gone" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Joined Tests"
+        android:text="@string/joined_tests"
         android:textSize="18sp"
         android:layout_marginTop="40dp"
         android:layout_marginStart="10dp"

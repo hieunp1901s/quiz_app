@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -18,10 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-
-import com.example.quiz.models.Test;
-import com.example.quiz.models.User;
-import com.example.quiz.ui.MainActivity;
 import com.example.quiz.ui.dialog.ChatListDialogFragment;
 import com.example.quiz.ui.dialog.FindTestDialogFragment;
 import com.example.quiz.ui.dialog.SessionExpiredDialogFragment;
@@ -31,6 +26,10 @@ import com.example.quiz.databinding.FragmentHomeBinding;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 
 /**
@@ -82,75 +81,62 @@ public class HomeFragment extends Fragment {
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         NavHostFragment navHostFragment = (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.home_nav_host_fragment);
-        NavController navController = navHostFragment.getNavController();
+        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
         BottomNavigationView bottomNav = binding.bottomNavigationView;
         NavigationUI.setupWithNavController(bottomNav, navController);
-        BadgeDrawable badgeDrawable = BadgeDrawable.create(getContext());
+        BadgeDrawable badgeDrawable = BadgeDrawable.create(requireContext());
+        badgeDrawable.setNumber(firebaseViewModel.getNewNotification().size());
 
-        firebaseViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                if (user != null) {
-                    binding.tvUser.setText(user.getName());
-                }
+        firebaseViewModel.getUserInfo().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                binding.tvUser.setText(user.getName());
             }
         });
 
-        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer == 0) {
-                    DialogFragment dialogFragment = new SessionExpiredDialogFragment();
-                    dialogFragment.setCancelable(false);
-                    dialogFragment.show(getParentFragmentManager(), "session expired");
-                }
+        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
+            if (integer == 0) {
+                DialogFragment dialogFragment = new SessionExpiredDialogFragment();
+                dialogFragment.setCancelable(false);
+                dialogFragment.show(getParentFragmentManager(), "session expired");
             }
         });
 
-        binding.btnFindTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!binding.etFindTest.getText().toString().equals("")) {
-                    firebaseViewModel.findTestFromFirebase(binding.etFindTest.getText().toString());
-                }
+        binding.btnFindTest.setOnClickListener(v -> {
+            if (!binding.etFindTest.getText().toString().equals("")) {
+                firebaseViewModel.findTestFromFirebase(binding.etFindTest.getText().toString());
             }
         });
 
-        firebaseViewModel.getFindTestResult().observe(getViewLifecycleOwner(), new Observer<Test>() {
-            @Override
-            public void onChanged(Test test) {
-                if (test != null) {
-                    binding.etFindTest.setText("");
-                    DialogFragment dialogFragment = new FindTestDialogFragment();
-                    dialogFragment.setCancelable(false);
-                    dialogFragment.show(getParentFragmentManager(), "find test");
-                }
+        firebaseViewModel.getFindTestResult().observe(getViewLifecycleOwner(), test -> {
+            if (test != null) {
+                binding.etFindTest.setText("");
+                DialogFragment dialogFragment = new FindTestDialogFragment();
+                dialogFragment.setCancelable(false);
+                dialogFragment.show(getParentFragmentManager(), "find test");
             }
         });
 
-        firebaseViewModel.getIsFindTestResultNull().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean == null) {
-
-                }
-                else if (aBoolean) {
-                    binding.tvAlert.setText("Can't find test!");
-                    firebaseViewModel.getIsFindTestResultNull().setValue(null);
-                }
-
-                else if (!aBoolean) {
-                    binding.tvAlert.setText("Network error!");
-                    firebaseViewModel.getIsFindTestResultNull().setValue(null);
-                }
+        firebaseViewModel.getIsFindTestResultNull().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean == null) {
 
             }
+            else if (aBoolean) {
+                binding.tvAlert.setText("Can't find test!");
+                firebaseViewModel.getIsFindTestResultNull().setValue(null);
+            }
+
+            else {
+                binding.tvAlert.setText("Network error!");
+                firebaseViewModel.getIsFindTestResultNull().setValue(null);
+            }
+
         });
 
         binding.etFindTest.addTextChangedListener(new TextWatcher() {
@@ -159,6 +145,7 @@ public class HomeFragment extends Fragment {
 
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.tvAlert.setText("Enter test ID");
@@ -181,22 +168,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        binding.fabMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dialogFragment = new ChatListDialogFragment();
-//                dialogFragment.setCancelable(false);
-                dialogFragment.show(getParentFragmentManager(), "list chatroom");
-            }
+        binding.fabMessage.setOnClickListener(v -> {
+            DialogFragment dialogFragment = new ChatListDialogFragment();
+            dialogFragment.show(getParentFragmentManager(), "list chatroom");
         });
 
-        firebaseViewModel.getNotification().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer != null)
-                    badgeDrawable.setNumber(integer);
-            }
-        });
+        firebaseViewModel.getNotifyListChatRoomDataChanged().observe(getViewLifecycleOwner(), notify -> badgeDrawable.setNumber(firebaseViewModel.getNewNotification().size()));
 
         return binding.getRoot();
     }

@@ -1,25 +1,17 @@
 package com.example.quiz.adapter;
 
-import android.util.Log;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.quiz.databinding.ChatRoomRecyclerviewItemBinding;
-import com.example.quiz.databinding.JoinListsRecyclerviewItemBinding;
 import com.example.quiz.databinding.ListChatroomRecyclerviewItemBinding;
 import com.example.quiz.models.ChatListDialogFragmentItemClicked;
 import com.example.quiz.models.ChatRoom;
-import com.example.quiz.models.Test;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.stream.Collectors;
 
 
 public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapter.ListChatRoomViewHolder> {
@@ -40,8 +32,6 @@ public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapte
 
     private void clearDupChatRoom() {
         for (int i = 0; i < list.size() - 1; i++) {
-            Log.d("i", i + "");
-            Log.d("list size", list.size() + "");
             for (int j = i + 1; j < list.size(); j++) {
                 if (list.get(i).getId().equals(list.get(j).getId())) {
                     list.remove(j);
@@ -60,25 +50,22 @@ public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapte
 
         public void setContent(int index) {
             binding.tvRoomName.setText(list.get(index).getName());
-
-            //check
+            if (list.get(index).getLastMessage() != null) {
+                String lastMessage = list.get(index).getLastMessage().getUser() + ": " + list.get(index).getLastMessage().getMessage();
+                binding.tvLastMessage.setText(lastMessage);
+            }
+            //change view if have notification
             for (int i = 0; i < notificationList.size(); i++)
-                if (list.get(index).getId().equals(notificationList.get(i)))
-                    binding.tvRoomName.setText(list.get(index).getName() + "....");
-
-
-
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String id = list.get(index).getId();
-                    Log.d("id", id);
-                    itemClicked.onItemClicked(id);
+                if (list.get(index).getId().equals(notificationList.get(i))) {
+                    binding.tvRoomName.setTextColor(Color.parseColor("#000000"));
+                    binding.tvLastMessage.setTextColor(Color.parseColor("#000000"));
+                    binding.tvRoomName.setTypeface(null, Typeface.BOLD);
+                    binding.tvLastMessage.setTypeface(null, Typeface.BOLD);
+                    break;
                 }
-            });
-        }
 
+            binding.getRoot().setOnClickListener(v -> itemClicked.onItemClicked(list.get(index)));
+        }
 
     }
     @NonNull

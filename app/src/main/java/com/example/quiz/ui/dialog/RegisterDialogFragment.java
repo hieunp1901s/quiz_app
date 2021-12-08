@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
-
 import android.view.Window;
 
 import android.widget.Toast;
@@ -19,6 +17,8 @@ import com.example.quiz.databinding.FragmentRegisterDialogBinding;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class RegisterDialogFragment extends DialogFragment {
     FragmentRegisterDialogBinding binding;
@@ -38,28 +38,20 @@ public class RegisterDialogFragment extends DialogFragment {
 
 
 
-        binding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        binding.btnCancel.setOnClickListener(v -> Objects.requireNonNull(getDialog()).dismiss());
 
-        binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userName = binding.etUsername.getText().toString();
-                String email = binding.etEmail.getText().toString();
-                String password = binding.etPassword.getText().toString();
+        binding.btnConfirm.setOnClickListener(v -> {
+            String userName = binding.etUsername.getText().toString();
+            String email = binding.etEmail.getText().toString();
+            String password = binding.etPassword.getText().toString();
 
-                if (userName.length() > 0 && password.length() > 0 && email.length() > 0) {
-                    firebaseViewModel.getProgressing().setValue(true);
-                    firebaseViewModel.register(userName, email, password);
-                    getDialog().dismiss();
-                }
-                else
-                    Toast.makeText(getContext(), "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
+            if (userName.length() > 0 && password.length() > 0 && email.length() > 0) {
+                firebaseViewModel.getProgressing().setValue(true);
+                firebaseViewModel.register(userName, email, password);
+                Objects.requireNonNull(getDialog()).dismiss();
             }
+            else
+                Toast.makeText(getContext(), "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
         });
 
         return builder;

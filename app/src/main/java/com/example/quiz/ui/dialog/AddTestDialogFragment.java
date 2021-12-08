@@ -8,9 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.view.Window;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -49,8 +47,7 @@ public class AddTestDialogFragment extends DialogFragment {
         binding.tvFile.setText(fileName);
         binding.etDate.addTextChangedListener(new TextWatcher() {
             private String current = "";
-            private String ddmmyyyy = "DDMMYYYY";
-            private Calendar cal = Calendar.getInstance();
+            private final Calendar cal = Calendar.getInstance();
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -72,6 +69,7 @@ public class AddTestDialogFragment extends DialogFragment {
                     if (clean.equals(cleanC)) sel--;
 
                     if (clean.length() < 8){
+                        String ddmmyyyy = "DDMMYYYY";
                         clean = clean + ddmmyyyy.substring(clean.length());
                     }else{
                         //This part makes sure that when we finish entering numbers
@@ -115,53 +113,39 @@ public class AddTestDialogFragment extends DialogFragment {
             }
         });
 
-        binding.tvTimeStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        binding.tvTimeStart.setText(hourOfDay + ":" + String.format("%02d", minutes));
-                    }
-                }, 0, 0, false);
-                timePickerDialog.show();
-            }
+        binding.tvTimeStart.setOnClickListener(v -> {
+            @SuppressLint("DefaultLocale") TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), (timePicker, hourOfDay, minutes) -> {
+                String timeStart = hourOfDay + ":" + String.format("%02d", minutes);
+                binding.tvTimeStart.setText(timeStart);}, 0, 0, false);
+            timePickerDialog.show();
         });
 
 
-        binding.btnConfirmAddTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (binding.etTestName.getText().toString().length() > 0
-                        && binding.tvTimeStart.getText().toString().length() > 0
-                        && binding.etDuration.getText().toString().length() > 0
-                        && binding.etDate.getText().toString().length() > 0) {
+        binding.btnConfirmAddTest.setOnClickListener(v -> {
+            if (binding.etTestName.getText().toString().length() > 0
+                    && binding.tvTimeStart.getText().toString().length() > 0
+                    && binding.etDuration.getText().toString().length() > 0
+                    && binding.etDate.getText().toString().length() > 0) {
 
-                    test.setTestName(binding.etTestName.getText().toString());
-                    test.setStartTime(binding.tvTimeStart.getText().toString());
-                    test.setDuration(binding.etDuration.getText().toString());
-                    test.setDate(binding.etDate.getText().toString());
-                    if (binding.cbMix.isChecked())
-                        test.setMix("true");
-                    else
-                        test.setMix("false");
-                    FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
-                    firebaseViewModel.addTestFirebase(test);
-                    Objects.requireNonNull(getDialog()).dismiss();
-                }
-
+                test.setTestName(binding.etTestName.getText().toString());
+                test.setStartTime(binding.tvTimeStart.getText().toString());
+                test.setDuration(binding.etDuration.getText().toString());
+                test.setDate(binding.etDate.getText().toString());
+                if (binding.cbMix.isChecked())
+                    test.setMix("true");
                 else
-                    Toast.makeText(getContext(), "All Field Must Be Entered", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        binding.btnCancelAddTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                    test.setMix("false");
+                FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
+                firebaseViewModel.addTestFirebase(test);
                 Objects.requireNonNull(getDialog()).dismiss();
             }
+
+            else
+                Toast.makeText(getContext(), "All Field Must Be Entered", Toast.LENGTH_SHORT).show();
+
         });
+
+        binding.btnCancelAddTest.setOnClickListener(v -> Objects.requireNonNull(getDialog()).dismiss());
 
         return builder;
     }

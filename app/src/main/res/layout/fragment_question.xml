@@ -39,7 +39,6 @@
                 android:layout_weight="4"
                 android:elevation="2dp"
                 android:gravity="center"
-                android:text="English for beginner"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="visible" />
@@ -107,7 +106,6 @@
                     android:background="@drawable/radio_selector"
                     android:elevation="2dp"
                     android:padding="5dp"
-                    android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -120,7 +118,6 @@
                     android:background="@drawable/radio_selector"
                     android:elevation="2dp"
                     android:padding="5dp"
-                    android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -132,7 +129,6 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/radio_selector"
                     android:elevation="2dp"
-                    android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -144,7 +140,6 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/radio_selector"
                     android:elevation="2dp"
-                    android:text="RadioButton"
                     android:textColor="@drawable/radio_text_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -163,6 +158,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
+                style="?android:buttonBarButtonStyle"
                 android:id="@+id/btnPrev"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
@@ -170,31 +166,33 @@
                 android:layout_weight="1"
                 android:backgroundTint="#8d83b6"
                 android:elevation="2dp"
-                android:text="Prev"
+                android:text="@string/prev"
                 android:textColor="@color/white"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <Button
                 android:id="@+id/btnSubmit"
+                style="?android:buttonBarButtonStyle"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="#8d83b6"
                 android:elevation="2dp"
-                android:text="Submit"
+                android:text="@string/submit"
                 android:textColor="@color/white"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <Button
                 android:id="@+id/btnNext"
+                style="?android:buttonBarButtonStyle"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="#8d83b6"
                 android:elevation="2dp"
-                android:text="Next"
+                android:text="@string/next"
                 android:textColor="@color/white"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
@@ -206,7 +204,6 @@
             android:layout_height="30dp"
             android:elevation="2dp"
             android:gravity="center"
-            android:text="TextView"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

@@ -1,30 +1,23 @@
 package com.example.quiz.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.quiz.databinding.FragmentTestResultBinding;
 import com.example.quiz.databinding.TestResultReyclerviewItemBinding;
 import com.example.quiz.models.Answer;
-import com.example.quiz.models.Test;
+import com.example.quiz.models.TestResultFragmentItemClicked;
 
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class TestResultAdapter extends RecyclerView.Adapter<TestResultAdapter.TestResultViewHolder> {
-    Test test;
     ArrayList<Answer> list;
+    TestResultFragmentItemClicked itemClicked;
 
-    public TestResultAdapter(ArrayList<Answer> list) {
+    public TestResultAdapter(ArrayList<Answer> list, TestResultFragmentItemClicked itemClicked) {
         this.list = list;
-    }
-
-    public void notifyAdapter() {
-        notifyDataSetChanged();
+        this.itemClicked = itemClicked;
     }
 
     public class TestResultViewHolder extends RecyclerView.ViewHolder {
@@ -36,11 +29,14 @@ public class TestResultAdapter extends RecyclerView.Adapter<TestResultAdapter.Te
         }
         
         public void setContent(int index) {
-            binding.tvID.setText(index + 1 + "");
+            String id = index + 1 + "";
+            binding.tvID.setText(id);
             binding.tvStudentName.setText(list.get(index).getParticipantName());
             binding.tvTimeFinish.setText(list.get(index).getTimeFinish());
             binding.tvResult.setText(list.get(index).getScore());
             binding.tvTimeDone.setText(list.get(index).getDuration());
+
+            binding.getRoot().setOnClickListener(v -> itemClicked.onItemClicked(list.get(index)));
         }
     }
 

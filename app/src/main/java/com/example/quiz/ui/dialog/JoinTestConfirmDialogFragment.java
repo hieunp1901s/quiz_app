@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -20,11 +18,6 @@ import com.example.quiz.viewmodels.FirebaseViewModel;
 import com.example.quiz.viewmodels.QuestionViewModel;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 public class JoinTestConfirmDialogFragment extends DialogFragment {
@@ -52,26 +45,21 @@ public class JoinTestConfirmDialogFragment extends DialogFragment {
 
         binding.etName.setText(Objects.requireNonNull(firebaseViewModel.getUserInfo().getValue()).getName());
 
-        binding.btnConfirmJoin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (calculatingTimerForTest.getResult() > 0) {
-//                    firebaseViewModel.getProgressing().setValue(true);
-
-                    //prepare data for test
-                    questionViewModel.getTest().setValue(test);
-                    questionViewModel.getTimer().setValue(calculatingTimerForTest.getResult());
-                    questionViewModel.getParticipantName().setValue(binding.etName.getText().toString());
-                    questionViewModel.getCancelTimer().setValue(false);
-                    Objects.requireNonNull(getDialog()).dismiss();
-
-                }
-                else {
-                    Objects.requireNonNull(getDialog()).dismiss();
-                    Toast.makeText(getContext(), "there's not time for test", Toast.LENGTH_SHORT).show();
-                }
+        binding.btnConfirmJoin.setOnClickListener(v -> {
+            if (calculatingTimerForTest.getResult() > 0) {
+                //prepare data for test
+                questionViewModel.getTest().setValue(test);
+                questionViewModel.getTimer().setValue(calculatingTimerForTest.getResult());
+                questionViewModel.getParticipantName().setValue(binding.etName.getText().toString());
+                questionViewModel.getCancelTimer().setValue(false);
+                Objects.requireNonNull(getDialog()).dismiss();
 
             }
+            else {
+                Objects.requireNonNull(getDialog()).dismiss();
+                Toast.makeText(getContext(), "there's not time for test", Toast.LENGTH_SHORT).show();
+            }
+
         });
 
         return builder;

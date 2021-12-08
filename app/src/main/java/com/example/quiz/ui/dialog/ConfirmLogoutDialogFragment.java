@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -35,20 +34,12 @@ public class ConfirmLogoutDialogFragment extends DialogFragment {
 
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
-        binding.btnNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Objects.requireNonNull(getDialog()).dismiss();
-            }
-        });
+        binding.btnNo.setOnClickListener(v -> Objects.requireNonNull(getDialog()).dismiss());
 
-        binding.btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Objects.requireNonNull(getDialog()).dismiss();
-                Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.loginFragment);
-                firebaseViewModel.logOut();
-            }
+        binding.btnYes.setOnClickListener(v -> {
+            Objects.requireNonNull(getDialog()).dismiss();
+            Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.loginFragment);
+            firebaseViewModel.logOut();
         });
 
         return builder;

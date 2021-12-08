@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -44,21 +43,13 @@ public class SubmitAnswerDialogFragment extends DialogFragment {
         builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         builder.setContentView(binding.getRoot());
 
-        binding.btnCancelSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Objects.requireNonNull(getDialog()).dismiss();
-            }
-        });
+        binding.btnCancelSubmit.setOnClickListener(v -> Objects.requireNonNull(getDialog()).dismiss());
 
-        binding.btnConfirmSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseViewModel.submitAnswerToRepoFirebase(answer, questionViewModel.getTest().getValue().getTestID());
-                questionViewModel.getCancelTimer().setValue(true);
-                Objects.requireNonNull(getDialog()).dismiss();
-                Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
-            }
+        binding.btnConfirmSubmit.setOnClickListener(v -> {
+            firebaseViewModel.submitAnswerToRepoFirebase(answer, Objects.requireNonNull(questionViewModel.getTest().getValue()).getTestID());
+            questionViewModel.getCancelTimer().setValue(true);
+            Objects.requireNonNull(getDialog()).dismiss();
+            Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
         });
         return builder;
     }

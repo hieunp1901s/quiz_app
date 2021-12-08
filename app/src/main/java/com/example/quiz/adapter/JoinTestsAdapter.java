@@ -1,7 +1,6 @@
 package com.example.quiz.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -19,8 +18,8 @@ import java.util.ArrayList;
 
 
 public class JoinTestsAdapter extends RecyclerView.Adapter<JoinTestsAdapter.JoinTestsViewHolder> {
-    private ArrayList<Test> joinTests;
-    private StudentTabFragmentItemClicked studentTabFragmentItemClicked;
+    private final ArrayList<Test> joinTests;
+    private final StudentTabFragmentItemClicked studentTabFragmentItemClicked;
 
     public JoinTestsAdapter(ArrayList<Test> joinTests, StudentTabFragmentItemClicked studentTabFragmentItemClicked) {
         this.joinTests = joinTests;
@@ -39,24 +38,25 @@ public class JoinTestsAdapter extends RecyclerView.Adapter<JoinTestsAdapter.Join
 
         }
         public void setContent(int index) {
-            binding.tvTestName.setText("Test name: " + joinTests.get(index).getTestName());
-            binding.tvTime.setText("Start time: " + joinTests.get(index).getStartTime()  + " - " + joinTests.get(index).getDate());
-            binding.tvNumberOfQuestions.setText(joinTests.get(index).getListQuestion().size() + " questions" + " (" + joinTests.get(index).getDuration() + " minutes)");
+            String testName = "Test name: " + joinTests.get(index).getTestName();
+            String startTime = "Start time: " + joinTests.get(index).getStartTime()  + " - " + joinTests.get(index).getDate();
+            String numberOfQuestions = joinTests.get(index).getListQuestion().size() + " questions" + " (" + joinTests.get(index).getDuration() + " minutes)";
+
+            binding.tvTestName.setText(testName);
+            binding.tvTime.setText(startTime);
+            binding.tvNumberOfQuestions.setText(numberOfQuestions);
 
             calculatingTimerForTest = new CalculatingTimerForTest(joinTests.get(index));
             if (calculatingTimerForTest.getResult() > 0) {
                 binding.ivIcon.setImageResource(R.mipmap.test_icon_available);
             }
 
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (calculatingTimerForTest.getResult() > 0) {
-                        studentTabFragmentItemClicked.onItemClicked(joinTests.get(index));
-                    }
-                    else
-                        Toast.makeText(itemView.getContext(), "not time", Toast.LENGTH_SHORT).show();
+            binding.getRoot().setOnClickListener(v -> {
+                if (calculatingTimerForTest.getResult() > 0) {
+                    studentTabFragmentItemClicked.onItemClicked(joinTests.get(index));
                 }
+                else
+                    Toast.makeText(itemView.getContext(), "not time", Toast.LENGTH_SHORT).show();
             });
         }
 

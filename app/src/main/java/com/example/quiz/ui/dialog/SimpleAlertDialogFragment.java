@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
+
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class SimpleAlertDialogFragment extends DialogFragment {
-    private String message;
+    private final String message;
 
     public SimpleAlertDialogFragment(String message) {
         this.message = message;
@@ -41,12 +41,9 @@ public class SimpleAlertDialogFragment extends DialogFragment {
 
         binding.tvMessage.setText(message);
 
-        binding.btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseViewModel.getCheckAnswerSubmitted().setValue(3);
-                Objects.requireNonNull(getDialog()).dismiss();
-            }
+        binding.btnExit.setOnClickListener(v -> {
+            firebaseViewModel.getCheckAnswerSubmitted().setValue(3);
+            Objects.requireNonNull(getDialog()).dismiss();
         });
 
         return builder;

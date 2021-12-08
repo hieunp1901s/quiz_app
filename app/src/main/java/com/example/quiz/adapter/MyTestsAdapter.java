@@ -1,7 +1,6 @@
 package com.example.quiz.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class MyTestsAdapter extends RecyclerView.Adapter<MyTestsAdapter.MyTestsViewHolder> {
-    private ArrayList<Test> myTests;
+    private final ArrayList<Test> myTests;
     TeacherTabFragmentItemClicked itemClicked;
 
     public MyTestsAdapter(ArrayList<Test> myTests, TeacherTabFragmentItemClicked itemClicked) {
@@ -37,15 +36,14 @@ public class MyTestsAdapter extends RecyclerView.Adapter<MyTestsAdapter.MyTestsV
         }
 
         public void setContent(int index) {
-            binding.tvTestName.setText("Test name: " + myTests.get(index).getTestName());
-            binding.tvTime.setText("Start time: " + myTests.get(index).getStartTime()  + " - " + myTests.get(index).getDate());
-            binding.tvNumberOfQuestions.setText(myTests.get(index).getListQuestion().size() + " questions" + " (" + myTests.get(index).getDuration() + " minutes)");
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemClicked.onItemClicked(myTests.get(index));
-                }
-            });
+            String testName = "Test name: " + myTests.get(index).getTestName();
+            String startTime = "Start time: " + myTests.get(index).getStartTime()  + " - " + myTests.get(index).getDate();
+            String numberOfQuestions = myTests.get(index).getListQuestion().size() + " questions" + " (" + myTests.get(index).getDuration() + " minutes)";
+
+            binding.tvTestName.setText(testName);
+            binding.tvTime.setText(startTime);
+            binding.tvNumberOfQuestions.setText(numberOfQuestions);
+            binding.getRoot().setOnClickListener(v -> itemClicked.onItemClicked(myTests.get(index)));
         }
     }
     @NonNull

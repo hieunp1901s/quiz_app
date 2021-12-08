@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -48,22 +47,22 @@
                     android:id="@+id/tvTestName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TextView" />
+
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TextView" />
+
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvNumberOfQuestions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TextView" />
+
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -78,7 +77,7 @@
             android:layout_weight="1"
 
             android:background="@drawable/login_button_selector"
-            android:text="CANCEL"
+            android:text="@string/cancel"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
@@ -91,7 +90,7 @@
             android:layout_marginEnd="40dp"
             android:layout_weight="1"
             android:background="@drawable/login_button_selector"
-            android:text="ADD"
+            android:text="@string/add"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />

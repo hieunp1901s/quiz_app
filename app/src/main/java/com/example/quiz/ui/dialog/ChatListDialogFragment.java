@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -14,31 +13,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.quiz.R;
-import com.example.quiz.adapter.JoinTestsAdapter;
 import com.example.quiz.adapter.ListChatRoomAdapter;
 import com.example.quiz.databinding.FragmentChatListDialogBinding;
 import com.example.quiz.models.ChatListDialogFragmentItemClicked;
+import com.example.quiz.models.ChatRoom;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.Objects;
+
 
 public class ChatListDialogFragment extends DialogFragment implements ChatListDialogFragmentItemClicked {
     FragmentChatListDialogBinding binding;
-    ArrayList<String> testID;
-    ArrayList<String> chatroomName;
-    FirebaseViewModel firebaseViewModel;
 
     public ChatListDialogFragment() {
 
     }
-    public ChatListDialogFragment(ArrayList<String> testID, ArrayList<String> chatroomName) {
-        this.testID = testID;
-        this.chatroomName = chatroomName;
-    }
+
 
     @NonNull
     @NotNull
@@ -52,19 +45,26 @@ public class ChatListDialogFragment extends DialogFragment implements ChatListDi
 
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
+        if (firebaseViewModel.getCurrentChatRoom().getValue() != null)
+            firebaseViewModel.removeCurrentChatRoomListener(firebaseViewModel.getCurrentChatRoom().getValue().getId());
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvListChatroom.setLayoutManager(layoutManager);
-        ListChatRoomAdapter listChatRoomAdapter = new ListChatRoomAdapter(firebaseViewModel.getListChatRoom(), firebaseViewModel.getNewNotification(), this::onItemClicked);
+        ListChatRoomAdapter listChatRoomAdapter = new ListChatRoomAdapter(firebaseViewModel.getListChatRoom(), firebaseViewModel.getNewNotification(), this);
         binding.rvListChatroom.setAdapter(listChatRoomAdapter);
+
+
+        firebaseViewModel.getNotifyChatRoomDataChanged().observe(requireActivity(), notify -> listChatRoomAdapter.notifyAdapter());
 
         return builder;
     }
 
     @Override
-    public void onItemClicked(String testID) {
-        getDialog().dismiss();
+    public void onItemClicked(ChatRoom chatRoom) {
+        Objects.requireNonNull(getDialog()).dismiss();
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
-        firebaseViewModel.initCurrentChatRoom(testID);
-        Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_chatRoomFragment);
+        firebaseViewModel.initCurrentChatRoom(chatRoom.getId());
+        firebaseViewModel.getCurrentChatRoom().setValue(chatRoom);
+        Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_chatRoomFragment);
     }
 }

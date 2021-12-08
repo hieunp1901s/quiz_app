@@ -1,26 +1,21 @@
 package com.example.quiz.adapter;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.quiz.R;
 import com.example.quiz.databinding.ChatRoomRecyclerviewItemBinding;
 import com.example.quiz.models.Message;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder> {
-    private ArrayList<Message> messages;
-    private String userID;
+    private final ArrayList<Message> messages;
+    private final String userID;
     public ChatRoomAdapter(ArrayList<Message> messages, String userID) {
         this.messages = messages;
         this.userID = userID;
@@ -41,6 +36,8 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRo
 
             if (messages.get(index).getUserId().equals(userID)) {
                 binding.getRoot().setGravity(Gravity.END);
+                binding.tvMessageContent.setBackgroundResource(R.drawable.my_message_background);
+                binding.tvMessageContent.setTextColor(Color.parseColor("#FFFFFF"));
             }
 
             binding.tvName.setText(messages.get(index).getUser());

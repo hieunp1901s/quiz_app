@@ -1,12 +1,14 @@
 package com.example.quiz.util;
 
-import com.example.quiz.R;
+import android.annotation.SuppressLint;
+
 import com.example.quiz.models.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class CalculatingTimerForTest {
     Test test;
@@ -17,7 +19,7 @@ public class CalculatingTimerForTest {
     }
 
     public long getResult() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date start = null;
 
         try {
@@ -27,7 +29,7 @@ public class CalculatingTimerForTest {
         }
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(start);
+        calendar.setTime(Objects.requireNonNull(start));
         calendar.add(Calendar.MINUTE, Integer.parseInt(test.getDuration()));
         Date end = calendar.getTime();
         if (now.before(end) && start.before(now)) {

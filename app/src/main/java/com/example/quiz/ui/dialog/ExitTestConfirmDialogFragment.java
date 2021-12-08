@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -35,20 +34,12 @@ public class ExitTestConfirmDialogFragment extends DialogFragment {
         builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         builder.setContentView(binding.getRoot());
 
-        binding.btnCancelExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Objects.requireNonNull(getDialog()).dismiss();
-            }
-        });
+        binding.btnCancelExit.setOnClickListener(v -> Objects.requireNonNull(getDialog()).dismiss());
 
-        binding.btnConfirmExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Objects.requireNonNull(getDialog()).dismiss();
-                questionViewModel.getCancelTimer().setValue(true);
-                Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
-            }
+        binding.btnConfirmExit.setOnClickListener(v -> {
+            Objects.requireNonNull(getDialog()).dismiss();
+            questionViewModel.getCancelTimer().setValue(true);
+            Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
         });
 
         return builder;

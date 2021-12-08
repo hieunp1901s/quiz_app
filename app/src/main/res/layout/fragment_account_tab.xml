@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Manage Account"
+            android:text="@string/manage_account"
             android:textSize="18sp"
             android:layout_marginTop="40dp"
             android:layout_marginStart="10dp"
@@ -47,14 +47,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="bottom"
-                android:text="Your profile"
+                android:text="@string/your_profile"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Change profile here"
+                android:text="@string/change_profile_here"
                 android:layout_weight="1"/>
 
             <View
@@ -89,14 +89,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="bottom"
-                android:text="Change password"
+                android:text="@string/change_password"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Change password here"
+                android:text="@string/change_password_here"
                 android:layout_weight="1"/>
 
             <View
@@ -130,10 +130,10 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Log out"
+                android:text="@string/log_out"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

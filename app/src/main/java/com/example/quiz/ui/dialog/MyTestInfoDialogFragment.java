@@ -7,7 +7,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -43,37 +42,24 @@ public class MyTestInfoDialogFragment extends DialogFragment {
         builder.setContentView(binding.getRoot());
 
         binding.tvTestID.setText(test.getTestID());
-        binding.btnCopy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("test id", binding.tvTestID.getText().toString());
-                clipboard.setPrimaryClip(clip);
-            }
+        binding.btnCopy.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("test id", binding.tvTestID.getText().toString());
+            clipboard.setPrimaryClip(clip);
         });
 
-        binding.btnResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseViewModel.getTestResult(test.getTestID());
-                Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_homeFragment_to_testResultFragment);
-            }
+        binding.btnResult.setOnClickListener(v -> {
+            firebaseViewModel.getTestResult(test.getTestID());
+            firebaseViewModel.getSelectedMyTest().setValue(test);
+            Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_homeFragment_to_testResultFragment);
         });
 
-        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseViewModel.deleteTest(test.getTestID());
-                Objects.requireNonNull(getDialog()).dismiss();
-            }
+        binding.btnDelete.setOnClickListener(v -> {
+            firebaseViewModel.deleteTest(test.getTestID());
+            Objects.requireNonNull(getDialog()).dismiss();
         });
 
-        binding.btnManage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_homeFragment_to_manageTestFragment);
-            }
-        });
+        binding.btnManage.setOnClickListener(v -> Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_homeFragment_to_manageTestFragment));
         return builder;
     }
 }

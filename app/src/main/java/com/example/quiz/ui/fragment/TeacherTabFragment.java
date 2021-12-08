@@ -9,20 +9,18 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
+
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quiz.adapter.MyTestsAdapter;
-import com.example.quiz.models.CacheData;
+
 import com.example.quiz.models.Question;
 import com.example.quiz.models.TeacherTabFragmentItemClicked;
 import com.example.quiz.models.Test;
@@ -39,14 +37,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -113,18 +110,12 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentTeacherTabBinding.inflate(inflater, container, false);
 
-        binding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mGetContent.launch("application/excel/*");
-
-            }
-        });
+        binding.button.setOnClickListener(v -> mGetContent.launch("application/excel/*"));
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
         RecyclerView.LayoutManager layoutManager =new LinearLayoutManager(getContext());
@@ -132,14 +123,7 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
         MyTestsAdapter myTestsAdapter = new MyTestsAdapter(firebaseViewModel.getListMyTest(), this);
         binding.rvMyTests.setAdapter(myTestsAdapter);
 
-        firebaseViewModel.getUpdateMyTest().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer > 0) {
-                    myTestsAdapter.notifyAdapter();
-                }
-            }
-        });
+        firebaseViewModel.getNotifyMyTestDataChanged().observe(getViewLifecycleOwner(), notify -> myTestsAdapter.notifyAdapter());
 
         return binding.getRoot();
     }
@@ -156,10 +140,8 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
             FileInputStream excelFile = new FileInputStream(new File(path));
             Workbook workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheetAt(0);
-            Iterator<Row> iterator = datatypeSheet.iterator();
 
-            while (iterator.hasNext()) {
-                Row currentRow = iterator.next();
+            for (Row currentRow : datatypeSheet) {
                 Iterator<Cell> cellIterator = currentRow.iterator();
                 String[] temp = {"", "", "", "", "", ""};
                 int index = 0;
@@ -170,8 +152,6 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
                 }
                 test.addQuestion(new Question(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]));
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

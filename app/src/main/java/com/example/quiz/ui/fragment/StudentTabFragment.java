@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +20,8 @@ import com.example.quiz.ui.dialog.JoinTestConfirmDialogFragment;
 import com.example.quiz.ui.dialog.SimpleAlertDialogFragment;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 import com.example.quiz.viewmodels.QuestionViewModel;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,7 +77,7 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentStudentTabBinding.inflate(inflater, container, false);
@@ -86,33 +87,25 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvJoinTests.setLayoutManager(layoutManager);
-        JoinTestsAdapter joinTestsAdapter = new JoinTestsAdapter(firebaseViewModel.getListJoinTest(), this::onItemClicked);
+        JoinTestsAdapter joinTestsAdapter = new JoinTestsAdapter(firebaseViewModel.getListJoinTest(), this);
         binding.rvJoinTests.setAdapter(joinTestsAdapter);
 
-        firebaseViewModel.getUpdateJoinTest().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer > 0) {
-                    joinTestsAdapter.notifyAdapter();
-                }
-            }
-        });
 
-        firebaseViewModel.getCheckAnswerSubmitted().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer == 1) {
-                    firebaseViewModel.getCheckAnswerSubmitted().setValue(3);
-                    firebaseViewModel.getProgressing().setValue(false);
-                    DialogFragment dialogFragment = new SimpleAlertDialogFragment("You already submitted!");
-                    dialogFragment.show(getParentFragmentManager(), "already submittted");
-                }
-                else if (integer == 0) {
-                    firebaseViewModel.getCheckAnswerSubmitted().setValue(3);
-                    firebaseViewModel.getProgressing().setValue(false);
-                    DialogFragment dialogFragment = new JoinTestConfirmDialogFragment(test);
-                    dialogFragment.show(getParentFragmentManager(), "join confirm");
-                }
+        firebaseViewModel.getNotifyJoinTestDataChanged().observe(getViewLifecycleOwner(), notify -> joinTestsAdapter.notifyAdapter());
+
+
+        firebaseViewModel.getCheckAnswerSubmitted().observe(getViewLifecycleOwner(), integer -> {
+            if (integer == 1) {
+                firebaseViewModel.getCheckAnswerSubmitted().setValue(3);
+                firebaseViewModel.getProgressing().setValue(false);
+                DialogFragment dialogFragment = new SimpleAlertDialogFragment("You already submitted!");
+                dialogFragment.show(getParentFragmentManager(), "already submitted");
+            }
+            else if (integer == 0) {
+                firebaseViewModel.getCheckAnswerSubmitted().setValue(3);
+                firebaseViewModel.getProgressing().setValue(false);
+                DialogFragment dialogFragment = new JoinTestConfirmDialogFragment(test);
+                dialogFragment.show(getParentFragmentManager(), "join confirm");
             }
         });
 

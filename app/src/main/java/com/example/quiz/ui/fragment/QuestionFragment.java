@@ -1,19 +1,19 @@
 package com.example.quiz.ui.fragment;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
+
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
+
 
 import com.example.quiz.R;
 import com.example.quiz.adapter.QuestionNavAdapter;
@@ -31,9 +31,10 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -45,6 +46,7 @@ import java.util.Calendar;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,8 +107,9 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
 
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentQuestionBinding.inflate(inflater, container, false);
@@ -146,64 +149,57 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
 
         questionViewModel.getNavIndex().setValue(0);
 
-        questionViewModel.getNavIndex().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer != null) {
-                    binding.tvCurrentQuestion.setText("Question " + (integer + 1) + "/" + test.getListQuestion().size());
-                    binding.tvQuestion.setText(test.getListQuestion().get(questionOrder.get(integer)).getQuestion());
-                    binding.rbAnswer1.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(0))));
-                    binding.rbAnswer2.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(1))));
-                    binding.rbAnswer3.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(2))));
-                    binding.rbAnswer4.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(3))));
-                }
-
-                if (!listAnswer.get(integer).equals(""))
-                    switch (listAnswer.get(integer)) {
-                        case "1":
-                            binding.rbAnswer1.setChecked(true);
-                            break;
-                        case "2":
-                            binding.rbAnswer2.setChecked(true);
-                            break;
-                        case "3":
-                            binding.rbAnswer3.setChecked(true);
-                            break;
-                        case "4":
-                            binding.rbAnswer4.setChecked(true);
-                            break;
-                    }
+        questionViewModel.getNavIndex().observe(getViewLifecycleOwner(), integer -> {
+            if (integer != null) {
+                String currentQuestion = "Question " + (integer + 1) + "/" + test.getListQuestion().size();
+                binding.tvCurrentQuestion.setText(currentQuestion);
+                binding.tvQuestion.setText(test.getListQuestion().get(questionOrder.get(integer)).getQuestion());
+                binding.rbAnswer1.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(0))));
+                binding.rbAnswer2.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(1))));
+                binding.rbAnswer3.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(2))));
+                binding.rbAnswer4.setText(test.getListQuestion().get(questionOrder.get(integer)).getAnswer(Character.getNumericValue(answerOrder.get(integer).charAt(3))));
             }
+
+            if (!listAnswer.get(Objects.requireNonNull(integer)).equals(""))
+                switch (listAnswer.get(integer)) {
+                    case "1":
+                        binding.rbAnswer1.setChecked(true);
+                        break;
+                    case "2":
+                        binding.rbAnswer2.setChecked(true);
+                        break;
+                    case "3":
+                        binding.rbAnswer3.setChecked(true);
+                        break;
+                    case "4":
+                        binding.rbAnswer4.setChecked(true);
+                        break;
+                }
         });
 
-        binding.btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (questionViewModel.getNavIndex().getValue() < test.getListQuestion().size() - 1) {
-                    duration++;
-                    binding.rgGroupAnswer.clearCheck();
-                    binding.rgGroupAnswer.jumpDrawablesToCurrentState();
-                    questionViewModel.getNavIndex().setValue(questionViewModel.getNavIndex().getValue() + 1);
-                }
-
+        binding.btnNext.setOnClickListener(v -> {
+            if (Objects.requireNonNull(questionViewModel.getNavIndex().getValue()) < test.getListQuestion().size() - 1) {
+                duration++;
+                binding.rgGroupAnswer.clearCheck();
+                binding.rgGroupAnswer.jumpDrawablesToCurrentState();
+                questionViewModel.getNavIndex().setValue(questionViewModel.getNavIndex().getValue() + 1);
             }
+
         });
 
-        binding.btnPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (questionViewModel.getNavIndex().getValue() > 0) {
-                    binding.rgGroupAnswer.clearCheck();
-                    binding.rgGroupAnswer.jumpDrawablesToCurrentState();
-                    questionViewModel.getNavIndex().setValue(questionViewModel.getNavIndex().getValue() - 1);
-                }
-
+        binding.btnPrev.setOnClickListener(v -> {
+            if (Objects.requireNonNull(questionViewModel.getNavIndex().getValue()) > 0) {
+                binding.rgGroupAnswer.clearCheck();
+                binding.rgGroupAnswer.jumpDrawablesToCurrentState();
+                questionViewModel.getNavIndex().setValue(questionViewModel.getNavIndex().getValue() - 1);
             }
+
         });
 
         //timer
-        CountDownTimer countDownTimer = new CountDownTimer(questionViewModel.getTimer().getValue(), 1000) {
+        CountDownTimer countDownTimer = new CountDownTimer(Objects.requireNonNull(questionViewModel.getTimer().getValue()), 1000) {
 
+            @SuppressLint("SetTextI18n")
             public void onTick(long millisUntilFinished) {
                 duration++;
                 long minute = millisUntilFinished / (1000 * 60);
@@ -226,7 +222,7 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
                 long second = duration - minute * 60;
                 answer.setDuration(minute+":"+ String.format("%02d", second));
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 Date now = Calendar.getInstance().getTime();
                 String strDate = simpleDateFormat.format(now);
                 answer.setTimeFinish(strDate);
@@ -246,94 +242,72 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
         layoutManager.setFlexDirection(FlexDirection.ROW);
         layoutManager.setJustifyContent(JustifyContent.FLEX_START);
         binding.rvNavQuestion.setLayoutManager(layoutManager);
-        QuestionNavAdapter adapter = new QuestionNavAdapter(questionViewModel.getTest().getValue().getListQuestion().size(), this);
+        QuestionNavAdapter adapter = new QuestionNavAdapter(Objects.requireNonNull(questionViewModel.getTest().getValue()).getListQuestion().size(), this);
         binding.rvNavQuestion.setAdapter(adapter);
 
-        binding.btnListQuestion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+        binding.btnListQuestion.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED));
+
+        binding.rgGroupAnswer.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.rbAnswer1:
+                    listAnswer.set(Objects.requireNonNull(questionViewModel.getNavIndex().getValue()), "1");
+                    break;
+                case R.id.rbAnswer2:
+                    listAnswer.set(Objects.requireNonNull(questionViewModel.getNavIndex().getValue()), "2");
+                    break;
+                case R.id.rbAnswer3:
+                    listAnswer.set(Objects.requireNonNull(questionViewModel.getNavIndex().getValue()), "3");
+                    break;
+                case R.id.rbAnswer4:
+                    listAnswer.set(Objects.requireNonNull(questionViewModel.getNavIndex().getValue()), "4");
+                    break;
             }
+
+            cacheData.setListAnswer(listAnswer);
+            writeCache();
         });
 
-        binding.rgGroupAnswer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rbAnswer1:
-                        listAnswer.set(questionViewModel.getNavIndex().getValue(), "1");
-                        break;
-                    case R.id.rbAnswer2:
-                        listAnswer.set(questionViewModel.getNavIndex().getValue(), "2");
-                        break;
-                    case R.id.rbAnswer3:
-                        listAnswer.set(questionViewModel.getNavIndex().getValue(), "3");
-                        break;
-                    case R.id.rbAnswer4:
-                        listAnswer.set(questionViewModel.getNavIndex().getValue(), "4");
-                        break;
-                }
-
-                cacheData.setListAnswer(listAnswer);
-                writeCache();
+        binding.btnSubmit.setOnClickListener(v -> {
+            int score = 0;
+            ArrayList<String> correctAnswerOrder = mapAnswerToCorrectOrder();
+            for (int i = 0; i < test.getListQuestion().size(); i++) {
+                if (correctAnswerOrder.get(i).equals(test.getListQuestion().get(i).getCorrectAnswer()))
+                    score++;
             }
+            answer.setScore(score + "/" +test.getListQuestion().size());
+            answer.setParticipant(questionViewModel.getParticipantName().getValue());
+            answer.setListAnswer(correctAnswerOrder);
+
+            long minute = duration / 60;
+            long second = duration - minute * 60;
+            answer.setDuration(minute+":"+ String.format("%02d", second));
+
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date now = Calendar.getInstance().getTime();
+            String strDate = simpleDateFormat.format(now);
+            answer.setTimeFinish(strDate);
+            DialogFragment dialogFragment = new SubmitAnswerDialogFragment(answer);
+            dialogFragment.show(getParentFragmentManager(), "submit answer");
+
         });
 
-        binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int score = 0;
-                ArrayList<String> correctAnswerOrder = mapAnswerToCorrectOrder();
-                for (int i = 0; i < test.getListQuestion().size(); i++) {
-                    if (correctAnswerOrder.get(i).equals(test.getListQuestion().get(i).getCorrectAnswer()))
-                        score++;
-                }
-                answer.setScore(score + "");
-                answer.setParticipant(questionViewModel.getParticipantName().getValue());
-                answer.setListAnswer(correctAnswerOrder);
-
-                long minute = duration / 60;
-                long second = duration - minute * 60;
-                answer.setDuration(minute+":"+ String.format("%02d", second));
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                Date now = Calendar.getInstance().getTime();
-                String strDate = simpleDateFormat.format(now);
-                answer.setTimeFinish(strDate);
-                DialogFragment dialogFragment = new SubmitAnswerDialogFragment(answer);
-                dialogFragment.show(getParentFragmentManager(), "submit answer");
-
-            }
-        });
-
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exitTest();
-            }
-        });
+        binding.btnBack.setOnClickListener(v -> exitTest());
 
         //override back press
         binding.getRoot().setFocusableInTouchMode(true);
         binding.getRoot().requestFocus();
-        binding.getRoot().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
-                {
-                    exitTest();
-                    return true;
-                }
-                return false;
+        binding.getRoot().setOnKeyListener((v, keyCode, event) -> {
+            if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
+            {
+                exitTest();
+                return true;
             }
+            return false;
         });
 
-        questionViewModel.getCancelTimer().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean)
-                    countDownTimer.cancel();
-            }
+        questionViewModel.getCancelTimer().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean)
+                countDownTimer.cancel();
         });
 
         binding.tvTitle.setText(test.getTestName());
@@ -392,17 +366,22 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
     }
 
     private ArrayList<String> mapAnswerToCorrectOrder() {
-        ArrayList<String> result = new ArrayList<>();
-        result.addAll(listAnswer);
+        ArrayList<String> result = new ArrayList<>(listAnswer);
         for (int i = 0; i < result.size(); i++) {
-            if (listAnswer.get(i).equals("1"))
-                result.set(questionOrder.get(i), answerOrder.get(i).substring(0, 1));
-            else if (listAnswer.get(i).equals("2"))
-                result.set(questionOrder.get(i), answerOrder.get(i).substring(1, 2));
-            else if (listAnswer.get(i).equals("3"))
-                result.set(questionOrder.get(i), answerOrder.get(i).substring(2, 3));
-            else if (listAnswer.get(i).equals("4"))
-                result.set(questionOrder.get(i), answerOrder.get(i).substring(3));
+            switch (listAnswer.get(i)) {
+                case "1":
+                    result.set(questionOrder.get(i), answerOrder.get(i).substring(0, 1));
+                    break;
+                case "2":
+                    result.set(questionOrder.get(i), answerOrder.get(i).substring(1, 2));
+                    break;
+                case "3":
+                    result.set(questionOrder.get(i), answerOrder.get(i).substring(2, 3));
+                    break;
+                case "4":
+                    result.set(questionOrder.get(i), answerOrder.get(i).substring(3));
+                    break;
+            }
         }
         return result;
     }
@@ -411,15 +390,12 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
         String filename = "cache";
         try {
             File.createTempFile(filename, null, requireContext().getCacheDir());
-            File cacheFile = new File(getContext().getCacheDir(), filename);
+            File cacheFile = new File(requireContext().getCacheDir(), filename);
             FileOutputStream fos = new FileOutputStream(cacheFile);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(cacheData);
             os.close();
             fos.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

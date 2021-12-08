@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.quiz.models.Answer;
 import com.example.quiz.models.ChatRoom;
 import com.example.quiz.models.Message;
+import com.example.quiz.models.Notify;
 import com.example.quiz.models.Test;
 import com.example.quiz.models.User;
 import com.example.quiz.repositories.FirebaseRepository;
@@ -19,12 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class FirebaseViewModel extends AndroidViewModel {
-    private FirebaseRepository firebaseRepository;
+    private final FirebaseRepository firebaseRepository;
+    private MutableLiveData<Test> selectedMyTest;
 
     public FirebaseViewModel(@NonNull @NotNull Application application) {
         super(application);
         firebaseRepository = new FirebaseRepository(application);
-
+        selectedMyTest = new MutableLiveData<>();
     }
 
     public void login(String email, String password) {
@@ -68,21 +70,21 @@ public class FirebaseViewModel extends AndroidViewModel {
         return firebaseRepository.getListJoinTest();
     }
 
-    public MutableLiveData<Integer> getUpdateJoinTest() {
-        return firebaseRepository.getUpdateJoinTest();
+    public MutableLiveData<Notify> getNotifyJoinTestDataChanged() {
+        return firebaseRepository.getNotifyJoinTestDataChanged();
     }
 
     public ArrayList<Test> getListMyTest() {
         return firebaseRepository.getListMyTest();
     }
 
-    public MutableLiveData<Integer> getUpdateMyTest() {
-        return firebaseRepository.getUpdateMyTest();
+    public MutableLiveData<Notify> getNotifyMyTestDataChanged() {
+        return firebaseRepository.getNotifyMyTestDataChanged();
     }
 
     public MutableLiveData<Integer> getCheckAnswerSubmitted() {return firebaseRepository.getCheckAnswerSubmitted();}
 
-    public MutableLiveData<String> getCurrentChatRoomID() {return firebaseRepository.getCurrentChatRoomID();}
+    public MutableLiveData<ChatRoom> getCurrentChatRoom() {return firebaseRepository.getCurrentChatRoom();}
 
     public void checkIfAnswerSubmitted(String testID) {
         firebaseRepository.checkIfAnswerSubmitted(testID);
@@ -116,18 +118,18 @@ public class FirebaseViewModel extends AndroidViewModel {
         firebaseRepository.removeCurrentChatRoomListener(testID);
     }
 
-    public MutableLiveData<Integer> getUpdateChatRoom() {
-        return firebaseRepository.getUpdateChatRoom();
-    }
+    public MutableLiveData<Notify> getNotifyChatRoomDataChanged() {return firebaseRepository.getNotifyChatRoomDataChanged();}
 
     public MutableLiveData<Boolean> getIsFindTestResultNull() {return firebaseRepository.getIsFindTestResultNull();}
 
-    public MutableLiveData<Integer> getNotification() {return firebaseRepository.getNotification();}
+    public MutableLiveData<Notify> getNotifyListChatRoomDataChanged() {return firebaseRepository.getNotifyListChatRoomDataChanged();}
 
     public void removeNewNotification(String testID) {firebaseRepository.removeNewNotification(testID);}
 
     public ArrayList<ChatRoom> getListChatRoom() {return firebaseRepository.getListChatRoom();}
 
     public ArrayList<String> getNewNotification() {return firebaseRepository.getNewNotification();}
+
+    public MutableLiveData<Test> getSelectedMyTest() {return selectedMyTest;}
 
 }

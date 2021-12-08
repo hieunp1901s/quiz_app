@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -17,6 +16,8 @@ import com.example.quiz.R;
 import com.example.quiz.ui.dialog.RegisterDialogFragment;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 import com.example.quiz.databinding.FragmentLoginRegisterBinding;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,45 +69,36 @@ public class LoginRegisterFragment extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         binding = FragmentLoginRegisterBinding.inflate(getLayoutInflater());
 
         firebaseViewModel.getLogInState().setValue(0);
 
-        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dialog = new RegisterDialogFragment();
-                dialog.setCancelable(false);
-                dialog.show(getParentFragmentManager(), "register dialog");
+        binding.btnRegister.setOnClickListener(v -> {
+            DialogFragment dialog = new RegisterDialogFragment();
+            dialog.setCancelable(false);
+            dialog.show(getParentFragmentManager(), "register dialog");
+        });
+
+        binding.btnLogin.setOnClickListener(v -> {
+            String email = binding.etUsername.getText().toString();
+            String password = binding.etLoginPassword.getText().toString();
+
+            if (email.length() > 0 && password.length() > 0) {
+                firebaseViewModel.getProgressing().setValue(true);
+                firebaseViewModel.login(email, password);
+
+            }
+            else {
+                Toast.makeText(getContext(), "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
             }
         });
 
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = binding.etUsername.getText().toString();
-                String password = binding.etLoginPassword.getText().toString();
-
-                if (email.length() > 0 && password.length() > 0) {
-                    firebaseViewModel.getProgressing().setValue(true);
-                    firebaseViewModel.login(email, password);
-
-                }
-                else {
-                    Toast.makeText(getContext(), "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer == 1)
-                    Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
-            }
+        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
+            if (integer == 1)
+                Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
         });
 
         return binding.getRoot();

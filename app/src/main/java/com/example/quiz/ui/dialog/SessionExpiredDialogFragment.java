@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -36,22 +35,11 @@ public class SessionExpiredDialogFragment extends DialogFragment {
         //override back press
         binding.getRoot().setFocusableInTouchMode(true);
         binding.getRoot().requestFocus();
-        binding.getRoot().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
-                    return true;
+        binding.getRoot().setOnKeyListener((v, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP);
 
-                return false;
-            }
-        });
-
-        binding.btnConfirmSessionExpired.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Objects.requireNonNull(getDialog()).dismiss();
-                Navigation.findNavController(getActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_loginFragment);
-            }
+        binding.btnConfirmSessionExpired.setOnClickListener(v -> {
+            Objects.requireNonNull(getDialog()).dismiss();
+            Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_loginFragment);
         });
 
         return builder;

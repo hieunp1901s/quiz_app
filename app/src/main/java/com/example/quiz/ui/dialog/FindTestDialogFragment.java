@@ -8,21 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.quiz.R;
 import com.example.quiz.databinding.FragmentFindTestDialogBinding;
-import com.example.quiz.models.Test;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
 
 public class FindTestDialogFragment extends DialogFragment {
     FragmentFindTestDialogBinding binding;
@@ -31,11 +29,37 @@ public class FindTestDialogFragment extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_find_test_dialog, new LinearLayout(getActivity()), false);
+        binding = FragmentFindTestDialogBinding.inflate(getLayoutInflater());
         Dialog builder = new Dialog(getActivity());
         builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
         builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        builder.setContentView(view);
+        builder.setContentView(binding.getRoot());
+
+        firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
+
+        firebaseViewModel.getFindTestResult().observe(getViewLifecycleOwner(), test -> {
+            if (test!= null) {
+                String testName = "Test name:" + test.getTestName();
+                String time = "Duration:" + test.getDuration() + " minutes";
+                String numberOfQuestions = test.getListQuestion().size() + " questions";
+                binding.tvTestName.setText(testName);
+                binding.tvTime.setText(time);
+                binding.tvNumberOfQuestions.setText(numberOfQuestions);
+            }
+
+        });
+
+        binding.btnCancel.setOnClickListener(v -> {
+            firebaseViewModel.getFindTestResult().setValue(null);
+            Objects.requireNonNull(getDialog()).dismiss();
+        });
+
+        binding.btnAdd.setOnClickListener(v -> {
+            firebaseViewModel.addTestToRepoFirebase(Objects.requireNonNull(firebaseViewModel.getFindTestResult().getValue()).getTestID(), "joinTests");
+            firebaseViewModel.getFindTestResult().setValue(null);
+            Objects.requireNonNull(getDialog()).dismiss();
+        });
+
         return builder;
     }
 
@@ -44,36 +68,7 @@ public class FindTestDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentFindTestDialogBinding.inflate(inflater, container, false);
-        firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
-        firebaseViewModel.getFindTestResult().observe(getViewLifecycleOwner(), new Observer<Test>() {
-            @Override
-            public void onChanged(Test test) {
-                if (test!= null) {
-                    binding.tvTestName.setText("Test name:" + test.getTestName());
-                    binding.tvTime.setText("Duration:" + test.getDuration() + " minutes");
-                    binding.tvNumberOfQuestions.setText(test.getListQuestion().size() + " questions");
-                }
-
-            }
-        });
-
-        binding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseViewModel.getFindTestResult().setValue(null);
-                getDialog().dismiss();
-            }
-        });
-
-        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseViewModel.addTestToRepoFirebase(firebaseViewModel.getFindTestResult().getValue().getTestID(), "joinTests");
-                firebaseViewModel.getFindTestResult().setValue(null);
-                getDialog().dismiss();
-            }
-        });
 
         return binding.getRoot();
     }

@@ -17,6 +17,8 @@ public class Message {
     }
 
     public String getUser() {
+        if (user == null)
+            return "";
         return user;
     }
 
@@ -33,6 +35,8 @@ public class Message {
     }
 
     public String getMessage() {
+        if (message == null)
+            return "";
         return message;
     }
 

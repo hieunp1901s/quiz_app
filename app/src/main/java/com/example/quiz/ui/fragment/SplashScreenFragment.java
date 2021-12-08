@@ -67,15 +67,12 @@ public class SplashScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
-        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                if (integer == 1) {
-                    Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_homeFragment);
-                }
-                else if (integer == 0) {
-                    Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_loginFragment);
-                }
+        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
+            if (integer == 1) {
+                Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_homeFragment);
+            }
+            else if (integer == 0) {
+                Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_loginFragment);
             }
         });
 

@@ -2,8 +2,8 @@ package com.example.quiz.ui.fragment;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,18 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.quiz.R;
-import com.example.quiz.adapter.MyTestsAdapter;
 import com.example.quiz.adapter.TestResultAdapter;
 import com.example.quiz.databinding.FragmentTestResultBinding;
+import com.example.quiz.models.Answer;
+import com.example.quiz.models.TestResultFragmentItemClicked;
+import com.example.quiz.ui.dialog.StudentAnswerInfoDialogFragment;
 import com.example.quiz.viewmodels.FirebaseViewModel;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link TestResultFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TestResultFragment extends Fragment {
+public class TestResultFragment extends Fragment implements TestResultFragmentItemClicked {
     FragmentTestResultBinding binding;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,7 +69,7 @@ public class TestResultFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
@@ -75,14 +78,11 @@ public class TestResultFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvTestResult.setLayoutManager(layoutManager);
 
-        firebaseViewModel.getFinishGetResult().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    TestResultAdapter testResultAdapter = new TestResultAdapter(firebaseViewModel.getListAnswer());
-                    binding.rvTestResult.setAdapter(testResultAdapter);
-                    firebaseViewModel.getFinishGetResult().setValue(false);
-                }
+        firebaseViewModel.getFinishGetResult().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean) {
+                TestResultAdapter testResultAdapter = new TestResultAdapter(firebaseViewModel.getListAnswer(), TestResultFragment.this);
+                binding.rvTestResult.setAdapter(testResultAdapter);
+                firebaseViewModel.getFinishGetResult().setValue(false);
             }
         });
 
@@ -93,5 +93,11 @@ public class TestResultFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onItemClicked(Answer answer) {
+        DialogFragment dialogFragment = new StudentAnswerInfoDialogFragment(answer);
+        dialogFragment.show(getParentFragmentManager(), "student answer");
     }
 }
