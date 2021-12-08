@@ -132,4 +132,6 @@ public class FirebaseViewModel extends AndroidViewModel {
 
     public MutableLiveData<Test> getSelectedMyTest() {return selectedMyTest;}
 
+    public void manageTest(Test test) {firebaseRepository.manageTest(test);}
+
 }

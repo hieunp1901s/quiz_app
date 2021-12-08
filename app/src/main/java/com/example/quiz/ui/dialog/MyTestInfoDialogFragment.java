@@ -59,7 +59,10 @@ public class MyTestInfoDialogFragment extends DialogFragment {
             Objects.requireNonNull(getDialog()).dismiss();
         });
 
-        binding.btnManage.setOnClickListener(v -> Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_homeFragment_to_manageTestFragment));
+        binding.btnManage.setOnClickListener(v -> {
+            firebaseViewModel.getSelectedMyTest().setValue(test);
+            Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_homeFragment_to_manageTestFragment);
+        });
         return builder;
     }
 }

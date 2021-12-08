@@ -686,6 +686,21 @@ public class FirebaseRepository {
         return notifyJoinTestDataChanged;
     }
 
+    public void manageTest(Test test) {
+        Call call = service.manageTest(test.getTestID(), test);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+    }
+
     public ArrayList<Test> getListMyTest() {
         return listMyTest;
     }

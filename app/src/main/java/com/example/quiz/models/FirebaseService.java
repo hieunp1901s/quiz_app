@@ -38,4 +38,7 @@ public interface FirebaseService {
     @POST("/chatroom/{testID}.json")
     Call<Void> sendMessage(@Path("testID") String testID, @Body Message message);
 
+    @PUT("/tests/{testID}.json")
+    Call<Void>  manageTest(@Path("testID") String testID, @Body Test test);
+
 }
