@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/studentTabFragment"
-        android:name="com.example.quiz.ui.fragment.StudentTabFragment"
+        android:name="com.example.quiz.views.fragment.StudentTabFragment"
         android:label="fragment_student_tab"
         tools:layout="@layout/fragment_student_tab" />
 </navigation>

@@ -8,11 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import androidx.core.app.NotificationCompat;
-
 import com.example.quiz.R;
-import com.example.quiz.ui.MainActivity;
+import com.example.quiz.views.MainActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "Alarm";

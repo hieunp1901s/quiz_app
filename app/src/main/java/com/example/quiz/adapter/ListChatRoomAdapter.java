@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.databinding.ListChatroomRecyclerviewItemBinding;
-import com.example.quiz.models.ChatListDialogFragmentItemClicked;
+import com.example.quiz.views.interfaces.ChatListDialogFragmentItemClicked;
 import com.example.quiz.models.ChatRoom;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-
 
 public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapter.ListChatRoomViewHolder> {
     ArrayList<ChatRoom> list;

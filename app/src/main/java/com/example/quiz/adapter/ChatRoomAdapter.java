@@ -5,12 +5,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.R;
 import com.example.quiz.databinding.ChatRoomRecyclerviewItemBinding;
 import com.example.quiz.models.Message;
+import com.example.quiz.models.MessageDiffUtilCallback;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder> {
@@ -21,8 +22,12 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRo
         this.userID = userID;
     }
 
-    public void notifyAdapter() {
-        notifyDataSetChanged();
+    public void updateListItem(ArrayList newList) {
+        final MessageDiffUtilCallback diffUtilCallback = new MessageDiffUtilCallback(messages, newList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+        this.messages.clear();
+        this.messages.addAll(newList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public class ChatRoomViewHolder extends RecyclerView.ViewHolder{

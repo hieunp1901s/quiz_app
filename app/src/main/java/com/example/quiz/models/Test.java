@@ -1,5 +1,7 @@
 package com.example.quiz.models;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 
 public class Test {
@@ -82,4 +84,18 @@ public class Test {
     public void setCount(int count) {
         this.count = count;
     }
+
+    @Override
+    public boolean equals(@Nullable @org.jetbrains.annotations.Nullable Object obj) {
+        Test object = (Test) obj;
+        if (this.getTestID().equals(object.getTestID()) && this.getTestName().equals(object.getTestName())
+            && this.getStartTime().equals(object.getStartTime())
+            && this.getMix().equals(object.getMix())
+            && this.getDate().equals(object.getDate())
+            && this.getDuration().equals(object.getDuration()))
+            return true;
+        return false;
+    }
+
+
 }

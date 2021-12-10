@@ -6,8 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.databinding.TestResultReyclerviewItemBinding;
 import com.example.quiz.models.Answer;
-import com.example.quiz.models.TestResultFragmentItemClicked;
-
+import com.example.quiz.views.interfaces.TestResultFragmentItemClicked;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 

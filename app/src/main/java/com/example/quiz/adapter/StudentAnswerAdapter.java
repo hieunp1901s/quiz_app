@@ -1,16 +1,12 @@
 package com.example.quiz.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.quiz.databinding.StudentAnswerRecyclerviewItemBinding;
 import com.example.quiz.models.Answer;
 import com.example.quiz.models.Test;
-
 import org.jetbrains.annotations.NotNull;
 
 public class StudentAnswerAdapter extends RecyclerView.Adapter<StudentAnswerAdapter.StudentAnswerViewHolder> {

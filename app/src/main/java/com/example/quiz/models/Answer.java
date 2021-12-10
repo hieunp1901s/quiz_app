@@ -1,6 +1,4 @@
 package com.example.quiz.models;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Answer {
@@ -9,7 +7,7 @@ public class Answer {
     private ArrayList<String> listAnswer;
     private String timeFinish;
     private String duration;
-    public Answer(){};
+    public Answer(){}
 
     public void setScore(String score) {
         this.score = score;

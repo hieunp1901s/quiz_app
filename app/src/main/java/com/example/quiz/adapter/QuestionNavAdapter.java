@@ -5,8 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.databinding.QuestionNavRecyclerviewItemBinding;
-import com.example.quiz.models.QuestionFragmentItemClicked;
-
+import com.example.quiz.views.interfaces.QuestionFragmentItemClicked;
 import org.jetbrains.annotations.NotNull;
 
 public class QuestionNavAdapter extends RecyclerView.Adapter<QuestionNavAdapter.QuestionNavViewHolder> {

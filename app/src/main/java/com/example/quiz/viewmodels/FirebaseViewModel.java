@@ -66,20 +66,12 @@ public class FirebaseViewModel extends AndroidViewModel {
         firebaseRepository.submitAnswerToRepoFirebase(answer, testID);
     }
 
-    public ArrayList<Test> getListJoinTest() {
-        return firebaseRepository.getListJoinTest();
+    public ArrayList<Test> getJoinedTestList() {
+        return firebaseRepository.getJoinedTestList();
     }
 
-    public MutableLiveData<Notify> getNotifyJoinTestDataChanged() {
-        return firebaseRepository.getNotifyJoinTestDataChanged();
-    }
-
-    public ArrayList<Test> getListMyTest() {
-        return firebaseRepository.getListMyTest();
-    }
-
-    public MutableLiveData<Notify> getNotifyMyTestDataChanged() {
-        return firebaseRepository.getNotifyMyTestDataChanged();
+    public ArrayList<Test> getMyTestList() {
+        return firebaseRepository.getMyTestList();
     }
 
     public MutableLiveData<Integer> getCheckAnswerSubmitted() {return firebaseRepository.getCheckAnswerSubmitted();}
@@ -90,8 +82,8 @@ public class FirebaseViewModel extends AndroidViewModel {
         firebaseRepository.checkIfAnswerSubmitted(testID);
     }
 
-    public ArrayList<Answer> getListAnswer() {
-        return firebaseRepository.getListAnswer();
+    public ArrayList<Answer> getAnswerList() {
+        return firebaseRepository.getAnswerList();
     }
 
     public MutableLiveData<Boolean> getFinishGetResult() {
@@ -126,12 +118,18 @@ public class FirebaseViewModel extends AndroidViewModel {
 
     public void removeNewNotification(String testID) {firebaseRepository.removeNewNotification(testID);}
 
-    public ArrayList<ChatRoom> getListChatRoom() {return firebaseRepository.getListChatRoom();}
+    public ArrayList<ChatRoom> getChatRoomList() {return firebaseRepository.getChatRoomList();}
 
     public ArrayList<String> getNewNotification() {return firebaseRepository.getNewNotification();}
 
     public MutableLiveData<Test> getSelectedMyTest() {return selectedMyTest;}
 
     public void manageTest(Test test) {firebaseRepository.manageTest(test);}
+
+    public MutableLiveData<ArrayList<Test>> getNewMyTestList() {return firebaseRepository.getNewMyTestList();}
+
+    public MutableLiveData<ArrayList<Test>> getNewJoinedTestList() {return firebaseRepository.getNewJoinedTestList();}
+
+    public MutableLiveData<ArrayList<Message>> getNewMessageList() {return firebaseRepository.getNewMessageList();}
 
 }

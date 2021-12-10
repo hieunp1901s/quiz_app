@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.quiz.ui.fragment.HomeFragment"
+        android:name="com.example.quiz.views.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home"
         app:startDestination="@id/action_homeFragment_to_loginFragment">
@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.quiz.ui.fragment.LoginRegisterFragment"
+        android:name="com.example.quiz.views.fragment.LoginRegisterFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login_register">
         <action
@@ -41,7 +41,7 @@
 
     <fragment
         android:id="@+id/questionFragment"
-        android:name="com.example.quiz.ui.fragment.QuestionFragment"
+        android:name="com.example.quiz.views.fragment.QuestionFragment"
         android:label="fragment_question"
         tools:layout="@layout/fragment_question" >
         <action
@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.example.quiz.ui.fragment.SplashScreenFragment"
+        android:name="com.example.quiz.views.fragment.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action
@@ -75,17 +75,17 @@
         app:popUpTo="@id/nav_graph" />
     <fragment
         android:id="@+id/testResultFragment"
-        android:name="com.example.quiz.ui.fragment.TestResultFragment"
+        android:name="com.example.quiz.views.fragment.TestResultFragment"
         android:label="fragment_test_result"
         tools:layout="@layout/fragment_test_result" />
     <fragment
         android:id="@+id/manageTestFragment"
-        android:name="com.example.quiz.ui.fragment.ManageTestFragment"
+        android:name="com.example.quiz.views.fragment.ManageTestFragment"
         android:label="fragment_manage_test"
         tools:layout="@layout/fragment_manage_test" />
     <fragment
         android:id="@+id/chatRoomFragment"
-        android:name="com.example.quiz.ui.fragment.ChatRoomFragment"
+        android:name="com.example.quiz.views.fragment.ChatRoomFragment"
         android:label="fragment_chat_room"
         tools:layout="@layout/fragment_chat_room" />
     <action

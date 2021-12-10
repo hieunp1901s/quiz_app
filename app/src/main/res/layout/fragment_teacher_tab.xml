@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.fragment.TeacherTabFragment"
+    tools:context=".views.fragment.TeacherTabFragment"
     android:background="@drawable/bottom_sheet">
 
     <FrameLayout

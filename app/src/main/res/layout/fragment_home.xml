@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.HomeFragment"
+    tools:context=".views.fragment.HomeFragment"
     android:windowSoftInputMode="adjustNothing"
     android:fitsSystemWindows="true">
 
@@ -86,6 +86,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/findTest"
         android:layout_width="296dp"
         android:layout_height="106dp"
         android:layout_gravity="center_horizontal"
