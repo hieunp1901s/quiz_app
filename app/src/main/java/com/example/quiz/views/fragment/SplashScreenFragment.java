@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,14 +67,23 @@ public class SplashScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
-        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
-            if (integer == 1) {
-                Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_homeFragment);
+        new CountDownTimer(3000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
             }
-            else if (integer == 0) {
-                Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_loginFragment);
+
+            public void onFinish() {
+                firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
+                    if (integer == 1) {
+                        Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_homeFragment);
+                    }
+                    else if (integer == 0) {
+                        Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_loginFragment);
+                    }
+                });
             }
-        });
+        }.start();
+
 
         return inflater.inflate(R.layout.fragment_splash_screen, container, false);
     }
