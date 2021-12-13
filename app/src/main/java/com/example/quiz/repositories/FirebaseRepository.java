@@ -18,7 +18,6 @@ import com.example.quiz.models.Answer;
 import com.example.quiz.models.ChatRoom;
 import com.example.quiz.interfaces.FirebaseService;
 import com.example.quiz.models.Message;
-import com.example.quiz.models.Notify;
 import com.example.quiz.models.Test;
 import com.example.quiz.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,8 +80,8 @@ public class FirebaseRepository {
     private static final int REMOVE_MY_TEST = 251;
 
     //save test for adapter
-    private ArrayList<Test> myTestList;
-    private ArrayList<Test> joinedTestList;
+    private MutableLiveData<ArrayList<Test>> myTestList;
+    private MutableLiveData<ArrayList<Test>> joinedTestList;
 
 
     MutableLiveData<Integer> checkAnswerSubmitted;
@@ -96,24 +95,14 @@ public class FirebaseRepository {
 
     //chatroom listener
     ValueEventListener chatRoomListener;
-    MutableLiveData<Notify> notifyListChatRoomDataChanged;
-    ArrayList<String> newNotification;
+    MutableLiveData<ArrayList<String>> newNotification;
 
     //current room listener
     ChildEventListener currentChatRoomListener;
-    ArrayList<Message> messages;
+    MutableLiveData<ArrayList<Message>> messages;
     MutableLiveData<ChatRoom> currentChatRoom;
-    MutableLiveData<Notify> notifyChatRoomDataChanged;
     long messageCount = 0;
-    ArrayList<ChatRoom> chatRoomList;
-
-    //ArrayList for diff util recyclerview
-    MutableLiveData<ArrayList<Test>> newMyTestList;
-    ArrayList<Test> tempMyTestList;
-    MutableLiveData<ArrayList<Test>> newJoinedTestList;
-    ArrayList<Test> tempJoinedTestList;
-    MutableLiveData<ArrayList<Message>> newMessageList;
-    ArrayList<Message> tempMessageList;
+    MutableLiveData<ArrayList<ChatRoom>> chatRoomList;
 
     public FirebaseRepository(Application application) {
         this.application = application;
@@ -177,8 +166,8 @@ public class FirebaseRepository {
         removeValueListenerToRepositories();
         removeAllListeners(REMOVE_JOINED_TEST);
         removeAllListeners(REMOVE_MY_TEST);
-        joinedTestList.clear();
-        myTestList.clear();
+        Objects.requireNonNull(joinedTestList.getValue()).clear();
+        newNotification.getValue().clear();
         firebaseAuth.signOut();
         logInState.setValue(LOG_IN_STATE_LOG_OUT);
         userInfo.postValue(null);
@@ -190,9 +179,10 @@ public class FirebaseRepository {
         sharedPref = application.getSharedPreferences("com.example.quiz", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
-
-        myTestList = new ArrayList<>();
-        joinedTestList = new ArrayList<>();
+        myTestList = new MutableLiveData<>();
+        myTestList.setValue(new ArrayList<>());
+        joinedTestList = new MutableLiveData<>();
+        joinedTestList.setValue(new ArrayList<>());
         findTestResult = new MutableLiveData<>();
         progressing = new MutableLiveData<>();
         userInfo = new MutableLiveData<>();
@@ -204,28 +194,21 @@ public class FirebaseRepository {
         finishGetResult.setValue(false);
         joinedTestIdList = new ArrayList<>();
         myTestIdList = new ArrayList<>();
-        notifyListChatRoomDataChanged = new MutableLiveData<>();
-        newNotification = new ArrayList<>();
-        messages = new ArrayList<>();
-        notifyChatRoomDataChanged = new MutableLiveData<>();
+        newNotification = new MutableLiveData<>();
+        newNotification.setValue(new ArrayList<>());
+        messages = new MutableLiveData<>();
+        messages.setValue(new ArrayList<>());
         isFindTestResultNull = new MutableLiveData<>();
-        chatRoomList = new ArrayList<>();
+        chatRoomList = new MutableLiveData<>();
+        chatRoomList.setValue(new ArrayList<>());
         currentChatRoom = new MutableLiveData<>();
-        newMyTestList = new MutableLiveData<>();
-        newJoinedTestList = new MutableLiveData<>();
-        tempJoinedTestList = new ArrayList<>();
-        tempMyTestList = new ArrayList<>();
-        newMessageList = new MutableLiveData<>();
-        tempMessageList = new ArrayList<>();
     }
 
     private void initValueEventListener() {
         joinedTestRepoListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                tempJoinedTestList.clear();
                 removeAllListeners(REMOVE_JOINED_TEST);
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     joinedTestIdList.add(dataSnapshot.getKey());
                 }
@@ -244,9 +227,7 @@ public class FirebaseRepository {
         myTestRepoListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                tempMyTestList.clear();
                 removeAllListeners(REMOVE_MY_TEST);
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     myTestIdList.add(dataSnapshot.getKey());
                 }
@@ -264,34 +245,55 @@ public class FirebaseRepository {
         joinedTestListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                ArrayList<Test> list = new ArrayList<>(Objects.requireNonNull(joinedTestList.getValue()));
                 //check if test exists or not
                 if (snapshot.exists()) {
                     //add chat room to chat room list
-                    chatRoomList.add(new ChatRoom(Objects.requireNonNull(snapshot.getValue(Test.class))));
-                    notifyChatRoomDataChanged.setValue(new Notify());
+                    ChatRoom chatRoom = new ChatRoom(snapshot.getValue(Test.class));
+                    ArrayList<ChatRoom> tempList = new ArrayList<>(chatRoomList.getValue());
+                    boolean check = false;
+                    for (int i = 0; i < tempList.size(); i++) {
+
+                        if (tempList.get(i).getId().equals(chatRoom.getId())) {
+                            tempList.remove(i);
+                            tempList.add(chatRoom);
+                            check = true;
+                            break;
+                        }
+
+                    }
+                    if (!check)
+                        tempList.add(chatRoom);
+
+                    chatRoomList.setValue(tempList);
 
                     boolean replace = false;
-                    for (int i = 0; i < tempJoinedTestList.size(); i++) {
-                        if (tempJoinedTestList.get(i).getTestID().equals(snapshot.getKey())) {
-                            tempJoinedTestList.remove(i);
-                            tempJoinedTestList.add(i, snapshot.getValue(Test.class));
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getTestID().equals(snapshot.getKey())) {
+                            list.remove(i);
+                            list.add(i, snapshot.getValue(Test.class));
                             replace = true;
                             break;
                         }
                     }
                     if (!replace)
-                        tempJoinedTestList.add(snapshot.getValue(Test.class));
-
-                    newJoinedTestList.setValue(tempJoinedTestList);
+                        list.add(snapshot.getValue(Test.class));
 
                     //
                     addAlarm(Objects.requireNonNull(snapshot.getValue(Test.class)));
                 }
                 //if test was removed, remove it from repo + remove this listener
                 else {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getTestID().equals(snapshot.getKey())) {
+                            list.remove(i);
+                            break;
+                        }
+                    }
                     databaseReference.child("repositories").child(Objects.requireNonNull(userInfo.getValue()).getJoinTests()).child(Objects.requireNonNull(snapshot.getKey())).removeValue();
                     removeAlarm(snapshot.getKey());
                 }
+                joinedTestList.setValue(list);
 
             }
 
@@ -305,30 +307,54 @@ public class FirebaseRepository {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 //check if test exists or not
+                ArrayList<Test> list = new ArrayList<>(Objects.requireNonNull(myTestList.getValue()));
+
                 if (snapshot.exists()) {
                     //add chat room to chat room list
-                    chatRoomList.add(new ChatRoom(Objects.requireNonNull(snapshot.getValue(Test.class))));
-                    notifyChatRoomDataChanged.setValue(new Notify());
+                    ChatRoom chatRoom = new ChatRoom(snapshot.getValue(Test.class));
+                    ArrayList<ChatRoom> tempList = new ArrayList<>(chatRoomList.getValue());
+                    boolean check = false;
+                    for (int i = 0; i < tempList.size(); i++) {
+
+                        if (tempList.get(i).getId().equals(chatRoom.getId())) {
+                            tempList.remove(i);
+                            tempList.add(chatRoom);
+                            check = true;
+                            break;
+                        }
+
+                    }
+                    if (!check)
+                        tempList.add(chatRoom);
+
+                    chatRoomList.setValue(tempList);
+
 
                     boolean replace = false;
-                    for (int i = 0; i < tempMyTestList.size(); i++) {
-                        if (tempMyTestList.get(i).getTestID().equals(snapshot.getKey())) {
-                            tempMyTestList.remove(i);
-                            tempMyTestList.add(i, snapshot.getValue(Test.class));
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getTestID().equals(snapshot.getKey())) {
+                            list.remove(i);
+                            list.add(i, snapshot.getValue(Test.class));
                             replace = true;
                             break;
                         }
                     }
                     if (!replace)
-                        tempMyTestList.add(snapshot.getValue(Test.class));
-
-                    newMyTestList.setValue(tempMyTestList);
+                        list.add(snapshot.getValue(Test.class));
                 }
 
                 //if test was removed, remove it from my test repo to trigger my test repo listener
                 else {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getTestID().equals(snapshot.getKey())) {
+                            list.remove(i);
+                            break;
+                        }
+                    }
                     databaseReference.child("repositories").child(Objects.requireNonNull(userInfo.getValue()).getMyTests()).child(Objects.requireNonNull(snapshot.getKey())).removeValue();
                 }
+
+                myTestList.setValue(list);
 
             }
 
@@ -351,13 +377,15 @@ public class FirebaseRepository {
                             addNewNotification(snapshot.getKey());
                         }
 
-                        for (int i = 0; i < chatRoomList.size(); i++) {
-                            if (chatRoomList.get(i).getId().equals(snapshot.getKey())) {
-                                chatRoomList.get(i).setLastMessage(dataSnapshot.getValue(Message.class));
+                        ArrayList<ChatRoom> list = new ArrayList<>(chatRoomList.getValue());
+
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getId().equals(snapshot.getKey())) {
+                                list.get(i).setLastMessage(dataSnapshot.getValue(Message.class));
+                                chatRoomList.setValue(list);
                                 break;
                             }
                         }
-                       notifyChatRoomDataChanged.setValue(new Notify());
                     }
                 }
 
@@ -373,12 +401,10 @@ public class FirebaseRepository {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 if (!(snapshot.getValue() instanceof String)) {
-//                    messages.add(snapshot.getValue(Message.class));
-//                    messageCount++;
-//                    notifyChatRoomDataChanged.setValue(new Notify());
-                    tempMessageList.add(snapshot.getValue(Message.class));
+                    ArrayList<Message> list = new ArrayList<>(messages.getValue());
+                    list.add(snapshot.getValue(Message.class));
                     messageCount++;
-                    newMessageList.setValue(tempMessageList);
+                    messages.setValue(list);
                 }
             }
 
@@ -680,7 +706,7 @@ public class FirebaseRepository {
         databaseReference.child("tests").child(testID).removeValue();
     }
 
-    public ArrayList<Test> getJoinedTestList() {
+    public MutableLiveData<ArrayList<Test>> getJoinedTestList() {
         return joinedTestList;
     }
 
@@ -699,7 +725,7 @@ public class FirebaseRepository {
         });
     }
 
-    public ArrayList<Test> getMyTestList() {
+    public MutableLiveData<ArrayList<Test>> getMyTestList() {
         return myTestList;
     }
 
@@ -727,17 +753,13 @@ public class FirebaseRepository {
 
     public MutableLiveData<ChatRoom> getCurrentChatRoom() {return currentChatRoom;}
 
-    public ArrayList<Message> getMessages() {return messages;}
-
-    public MutableLiveData<Notify> getNotifyChatRoomDataChanged() {return notifyChatRoomDataChanged;}
+    public MutableLiveData<ArrayList<Message>> getMessages() {return messages;}
 
     public MutableLiveData<Boolean> getIsFindTestResultNull() {return isFindTestResultNull;}
 
-    public MutableLiveData<Notify> getNotifyListChatRoomDataChanged() {return notifyListChatRoomDataChanged;}
+    public MutableLiveData<ArrayList<String>> getNewNotification() {return newNotification;}
 
-    public ArrayList<String> getNewNotification() {return newNotification;}
-
-    public ArrayList<ChatRoom> getChatRoomList() {return chatRoomList;}
+    public MutableLiveData<ArrayList<ChatRoom>> getChatRoomList() {return chatRoomList;}
 
 
     private synchronized void addAlarm(Test test) {
@@ -778,25 +800,27 @@ public class FirebaseRepository {
     }
 
     private synchronized void addNewNotification(String testID) {
+        ArrayList<String> list = new ArrayList<>(newNotification.getValue());
         boolean check = false;
-        for (int i = 0; i < newNotification.size(); i++) {
-            if (newNotification.get(i).equals(testID)) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(testID)) {
                 check = true;
                 break;
             }
 
         }
         if (!check) {
-            newNotification.add(testID);
-            notifyListChatRoomDataChanged.setValue(new Notify());
+            list.add(testID);
+            newNotification.setValue(list);
         }
     }
 
     public void removeNewNotification(String testID) {
-        for (int i = 0; i < newNotification.size(); i++) {
-            if (newNotification.get(i).equals(testID)) {
-                newNotification.remove(i);
-                notifyListChatRoomDataChanged.setValue(new Notify());
+        ArrayList<String> list = new ArrayList<>(newNotification.getValue());
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equals(testID)) {
+                list.remove(i);
+                newNotification.setValue(list);
                 break;
             }
         }
@@ -818,16 +842,12 @@ public class FirebaseRepository {
     }
 
     public void initCurrentChatRoom(String testID) {
-        messages.clear();
+        Objects.requireNonNull(messages.getValue()).clear();
         databaseReference.child("chatroom").child(testID).addChildEventListener(currentChatRoomListener);
     }
 
     public void removeCurrentChatRoomListener(String testID) {
-        messages.clear();
+        Objects.requireNonNull(messages.getValue()).clear();
         databaseReference.child("chatroom").child(testID).removeEventListener(currentChatRoomListener);
     }
-
-    public MutableLiveData<ArrayList<Test>> getNewMyTestList() {return newMyTestList;}
-    public MutableLiveData<ArrayList<Test>> getNewJoinedTestList() {return newJoinedTestList;}
-    public MutableLiveData<ArrayList<Message>> getNewMessageList() {return newMessageList;}
 }

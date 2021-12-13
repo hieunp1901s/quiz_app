@@ -2,18 +2,12 @@ package com.example.quiz.views.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -98,20 +92,16 @@ public class HomeFragment extends Fragment {
         BottomNavigationView bottomNav = binding.bottomNavigationView;
         NavigationUI.setupWithNavController(bottomNav, navController);
         BadgeDrawable badgeDrawable = BadgeDrawable.create(requireContext());
-        badgeDrawable.setNumber(firebaseViewModel.getNewNotification().size());
 
-        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-            @Override
-            public void onDestinationChanged(@NonNull @NotNull NavController controller, @NonNull @NotNull NavDestination destination, @Nullable @org.jetbrains.annotations.Nullable Bundle arguments) {
-                if (destination.getId() == R.id.studentTabFragment) {
-                    binding.findTest.setVisibility(View.VISIBLE);
-                }
-                else if (destination.getId() == R.id.teacherTabFragment) {
-                    binding.findTest.setVisibility(View.INVISIBLE);
-                }
-                else if (destination.getId() == R.id.accountTabFragment) {
-                    binding.findTest.setVisibility(View.INVISIBLE);
-                }
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.studentTabFragment) {
+                binding.findTest.setVisibility(View.VISIBLE);
+            }
+            else if (destination.getId() == R.id.teacherTabFragment) {
+                binding.findTest.setVisibility(View.INVISIBLE);
+            }
+            else if (destination.getId() == R.id.accountTabFragment) {
+                binding.findTest.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -194,8 +184,7 @@ public class HomeFragment extends Fragment {
             dialogFragment.show(getParentFragmentManager(), "list chatroom");
         });
 
-        firebaseViewModel.getNotifyListChatRoomDataChanged().observe(getViewLifecycleOwner(), notify -> badgeDrawable.setNumber(firebaseViewModel.getNewNotification().size()));
-
+        firebaseViewModel.getNewNotification().observe(getViewLifecycleOwner(), strings -> badgeDrawable.setNumber(strings.size()));
         return binding.getRoot();
     }
 

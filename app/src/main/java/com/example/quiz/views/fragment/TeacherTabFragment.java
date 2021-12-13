@@ -14,8 +14,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,16 +120,10 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvMyTests.setLayoutManager(layoutManager);
-        MyTestAdapter myTestAdapter = new MyTestAdapter(firebaseViewModel.getMyTestList(), this);
+        MyTestAdapter myTestAdapter = new MyTestAdapter(this);
         binding.rvMyTests.setAdapter(myTestAdapter);
 
-        firebaseViewModel.getNewMyTestList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Test>>() {
-            @Override
-            public void onChanged(ArrayList<Test> tests) {
-                if (tests != null)
-                    myTestAdapter.updateListItem(tests);
-            }
-        });
+        firebaseViewModel.getMyTestList().observe(getViewLifecycleOwner(), tests -> myTestAdapter.submitList(tests));
 
         return binding.getRoot();
     }
@@ -188,7 +180,6 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         Test test = readExcel(path);
-        Log.d("test size", test.getListQuestion().size() + "");
         DialogFragment dialog = new AddTestDialogFragment(fileNameFromPath(path), test);
         dialog.setCancelable(false);
         dialog.show(getParentFragmentManager(), "add test dialog");

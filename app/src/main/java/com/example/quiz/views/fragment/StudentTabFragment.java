@@ -90,14 +90,13 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvJoinTests.setLayoutManager(layoutManager);
-        JoinedTestAdapter joinedTestAdapter = new JoinedTestAdapter(firebaseViewModel.getJoinedTestList(), this);
+        JoinedTestAdapter joinedTestAdapter = new JoinedTestAdapter(this);
         binding.rvJoinTests.setAdapter(joinedTestAdapter);
 
-        firebaseViewModel.getNewJoinedTestList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Test>>() {
+        firebaseViewModel.getJoinedTestList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Test>>() {
             @Override
             public void onChanged(ArrayList<Test> tests) {
-                if (tests != null)
-                    joinedTestAdapter.updateListItem(tests);
+                joinedTestAdapter.submitList(tests);
             }
         });
 

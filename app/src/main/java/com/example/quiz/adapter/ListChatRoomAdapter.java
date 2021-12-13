@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.databinding.ListChatroomRecyclerviewItemBinding;
 import com.example.quiz.views.interfaces.ChatListDialogFragmentItemClicked;
@@ -12,32 +14,26 @@ import com.example.quiz.models.ChatRoom;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
-public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapter.ListChatRoomViewHolder> {
-    ArrayList<ChatRoom> list;
+public class ListChatRoomAdapter extends ListAdapter<ChatRoom, ListChatRoomAdapter.ListChatRoomViewHolder> {
     ArrayList<String> notificationList;
     ChatListDialogFragmentItemClicked itemClicked;
-    public ListChatRoomAdapter(ArrayList<ChatRoom> list, ArrayList<String> notificationList, ChatListDialogFragmentItemClicked itemClicked) {
-        this.list = list;
+    public ListChatRoomAdapter( ArrayList<String> notificationList, ChatListDialogFragmentItemClicked itemClicked) {
+        super(DIFF_CALLBACK);
         this.notificationList = notificationList;
         this.itemClicked = itemClicked;
-        clearDupChatRoom();
     }
-
-    public void notifyAdapter() {
-        clearDupChatRoom();
-        notifyDataSetChanged();
-    }
-
-    private void clearDupChatRoom() {
-        for (int i = 0; i < list.size() - 1; i++) {
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(i).getId().equals(list.get(j).getId())) {
-                    list.remove(j);
-                    j--;
-                }
-            }
+    public static final DiffUtil.ItemCallback<ChatRoom> DIFF_CALLBACK = new DiffUtil.ItemCallback<ChatRoom>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull @NotNull ChatRoom oldItem, @NonNull @NotNull ChatRoom newItem) {
+            return false;
         }
-    }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull @NotNull ChatRoom oldItem, @NonNull @NotNull ChatRoom newItem) {
+            return false;
+        }
+    };
+
 
     public class ListChatRoomViewHolder extends RecyclerView.ViewHolder{
         ListChatroomRecyclerviewItemBinding binding;
@@ -46,15 +42,15 @@ public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapte
             this.binding = binding;
         }
 
-        public void setContent(int index) {
-            binding.tvRoomName.setText(list.get(index).getName());
-            if (list.get(index).getLastMessage() != null) {
-                String lastMessage = list.get(index).getLastMessage().getUser() + ": " + list.get(index).getLastMessage().getMessage();
+        public void bindTo(ChatRoom chatRoom) {
+            binding.tvRoomName.setText(chatRoom.getName());
+            if (chatRoom.getLastMessage() != null) {
+                String lastMessage = chatRoom.getLastMessage().getUser() + ": " + chatRoom.getLastMessage().getMessage();
                 binding.tvLastMessage.setText(lastMessage);
             }
             //change view if have notification
             for (int i = 0; i < notificationList.size(); i++)
-                if (list.get(index).getId().equals(notificationList.get(i))) {
+                if (chatRoom.getId().equals(notificationList.get(i))) {
                     binding.tvRoomName.setTextColor(Color.parseColor("#000000"));
                     binding.tvLastMessage.setTextColor(Color.parseColor("#000000"));
                     binding.tvRoomName.setTypeface(null, Typeface.BOLD);
@@ -62,7 +58,7 @@ public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapte
                     break;
                 }
 
-            binding.getRoot().setOnClickListener(v -> itemClicked.onItemClicked(list.get(index)));
+            binding.getRoot().setOnClickListener(v -> itemClicked.onItemClicked(chatRoom));
         }
 
     }
@@ -76,11 +72,6 @@ public class ListChatRoomAdapter extends RecyclerView.Adapter<ListChatRoomAdapte
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ListChatRoomAdapter.ListChatRoomViewHolder holder, int position) {
-        holder.setContent(position);
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
+        holder.bindTo(getItem(position));
     }
 }

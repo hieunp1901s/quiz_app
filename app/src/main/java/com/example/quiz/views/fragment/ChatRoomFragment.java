@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.example.quiz.models.Message;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
@@ -35,6 +37,7 @@ public class ChatRoomFragment extends Fragment {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
     FirebaseViewModel firebaseViewModel;
+    String chatroomID;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -87,30 +90,36 @@ public class ChatRoomFragment extends Fragment {
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        String chatroomID = Objects.requireNonNull(firebaseViewModel.getCurrentChatRoom().getValue()).getId();
+        chatroomID = Objects.requireNonNull(firebaseViewModel.getCurrentChatRoom().getValue()).getId();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvChat.setLayoutManager(layoutManager);
-        ChatRoomAdapter chatRoomAdapter = new ChatRoomAdapter(firebaseViewModel.getMessages(), firebaseViewModel.getUser().getUid());
+        ChatRoomAdapter chatRoomAdapter = new ChatRoomAdapter(firebaseViewModel.getUser().getUid());
         binding.rvChat.setAdapter(chatRoomAdapter);
-        binding.rvChat.scrollToPosition(firebaseViewModel.getMessages().size() - 1);
         binding.tvRoom.setText(firebaseViewModel.getCurrentChatRoom().getValue().getName());
         binding.rvChat.setItemAnimator(null);
 
         binding.btnBackChatroom.setOnClickListener(v -> {
             saveLastMessage();
-            firebaseViewModel.removeCurrentChatRoomListener(chatroomID);
-            firebaseViewModel.removeNewNotification(chatroomID);
+            clearData();
             Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
         });
 
-
-        firebaseViewModel.getNewMessageList().observe(getViewLifecycleOwner(), messages -> {
-            if (messages != null) {
-                chatRoomAdapter.updateListItem(messages);
-                binding.rvChat.scrollToPosition(firebaseViewModel.getMessages().size() - 1);
+        firebaseViewModel.getMessages().observe(getViewLifecycleOwner(), new Observer<ArrayList<Message>>() {
+            @Override
+            public void onChanged(ArrayList<Message> messages) {
+                chatRoomAdapter.submitList(messages);
             }
+        });
 
+
+        //scroll to latest inserted item everytime an item added
+        chatRoomAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                binding.rvChat.scrollToPosition(firebaseViewModel.getMessages().getValue().size() - 1);
+            }
         });
 
         binding.btnSend.setOnClickListener(v -> {
@@ -126,8 +135,7 @@ public class ChatRoomFragment extends Fragment {
             if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
             {
                 saveLastMessage();
-                firebaseViewModel.removeCurrentChatRoomListener(chatroomID);
-                firebaseViewModel.removeNewNotification(chatroomID);
+                clearData();
                 Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_global_homeFragment);
                 return true;
             }
@@ -139,9 +147,15 @@ public class ChatRoomFragment extends Fragment {
 
     private void saveLastMessage() {
         String key = Objects.requireNonNull(firebaseViewModel.getCurrentChatRoom().getValue()).getId() + ".";
-        int index = firebaseViewModel.getMessages().size() - 1;
+        int index = firebaseViewModel.getMessages().getValue().size() - 1;
         editor = sharedPref.edit();
-        editor.putString(key, firebaseViewModel.getMessages().get(index).getMessage());
+        editor.putString(key, firebaseViewModel.getMessages().getValue().get(index).getMessage());
         editor.apply();
+    }
+
+    private void clearData() {
+        firebaseViewModel.removeCurrentChatRoomListener(chatroomID);
+        firebaseViewModel.getMessages().getValue().clear();
+        firebaseViewModel.removeNewNotification(chatroomID);
     }
 }

@@ -3,32 +3,37 @@ package com.example.quiz.adapter;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.R;
 import com.example.quiz.databinding.ChatRoomRecyclerviewItemBinding;
 import com.example.quiz.models.Message;
-import com.example.quiz.models.MessageDiffUtilCallback;
-import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
 
-public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder> {
-    private final ArrayList<Message> messages;
+import org.jetbrains.annotations.NotNull;
+
+public class ChatRoomAdapter extends ListAdapter<Message, ChatRoomAdapter.ChatRoomViewHolder> {
     private final String userID;
-    public ChatRoomAdapter(ArrayList<Message> messages, String userID) {
-        this.messages = messages;
+    public ChatRoomAdapter(String userID) {
+        super(DIFF_CALLBACK);
         this.userID = userID;
     }
 
-    public void updateListItem(ArrayList newList) {
-        final MessageDiffUtilCallback diffUtilCallback = new MessageDiffUtilCallback(messages, newList);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        this.messages.clear();
-        this.messages.addAll(newList);
-        diffResult.dispatchUpdatesTo(this);
-    }
+    public static final DiffUtil.ItemCallback<Message> DIFF_CALLBACK = new DiffUtil.ItemCallback<Message>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull @NotNull Message oldItem, @NonNull @NotNull Message newItem) {
+            return false;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull @NotNull Message oldItem, @NonNull @NotNull Message newItem) {
+            return false;
+        }
+    };
+
 
     public class ChatRoomViewHolder extends RecyclerView.ViewHolder{
         ChatRoomRecyclerviewItemBinding binding;
@@ -37,17 +42,33 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRo
             this.binding = binding;
         }
 
-        public void setContent(int index) {
+        public void init(Message message) {
+            binding.getRoot().setGravity(Gravity.START);
+            binding.tvMessageContent.setBackgroundResource(R.drawable.message_background);
+            binding.tvMessageContent.setTextColor(Color.parseColor("#000000"));
+            binding.tvName.setText(message.getUser());
+            binding.tvMessageContent.setText(message.getMessage());
+            binding.tvTimeSend.setText(message.getTime());
+            binding.tvName.setVisibility(View.VISIBLE);
+            binding.tvTimeSend.setVisibility(View.VISIBLE);
+        }
 
-            if (messages.get(index).getUserId().equals(userID)) {
+        public void bindTo(Message message, int index) {
+            init(message);
+            if (message.getUserId().equals(userID)) {
                 binding.getRoot().setGravity(Gravity.END);
                 binding.tvMessageContent.setBackgroundResource(R.drawable.my_message_background);
                 binding.tvMessageContent.setTextColor(Color.parseColor("#FFFFFF"));
+                binding.tvName.setVisibility(View.GONE);
             }
 
-            binding.tvName.setText(messages.get(index).getUser());
-            binding.tvMessageContent.setText(messages.get(index).getMessage());
-            binding.tvTimeSend.setText(messages.get(index).getTime());
+            if (index > 0) {
+                if (getItem(index -1).getTime().equals(message.getTime()))
+                    binding.tvTimeSend.setVisibility(View.GONE);
+                if (getItem(index -1).getUserId().equals(message.getUserId()))
+                    binding.tvName.setVisibility(View.GONE);
+            }
+
         }
     }
 
@@ -61,14 +82,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRo
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ChatRoomAdapter.ChatRoomViewHolder holder, int position) {
-        holder.setContent(position);
+        holder.bindTo(getItem(position), position);
     }
 
-    @Override
-    public int getItemCount() {
-        if (messages == null)
-            return 0;
-        else
-            return messages.size();
-    }
 }

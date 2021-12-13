@@ -8,6 +8,7 @@ import android.view.Window;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,23 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.R;
 import com.example.quiz.adapter.ListChatRoomAdapter;
 import com.example.quiz.databinding.FragmentChatListDialogBinding;
+import com.example.quiz.models.Message;
 import com.example.quiz.views.interfaces.ChatListDialogFragmentItemClicked;
 import com.example.quiz.models.ChatRoom;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 
 public class ChatListDialogFragment extends DialogFragment implements ChatListDialogFragmentItemClicked {
     FragmentChatListDialogBinding binding;
-
-    public ChatListDialogFragment() {
-
-    }
-
-
     @NonNull
     @NotNull
     @Override
@@ -44,16 +41,17 @@ public class ChatListDialogFragment extends DialogFragment implements ChatListDi
 
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
-        if (firebaseViewModel.getCurrentChatRoom().getValue() != null)
+        if (firebaseViewModel.getCurrentChatRoom().getValue() != null) {
             firebaseViewModel.removeCurrentChatRoomListener(firebaseViewModel.getCurrentChatRoom().getValue().getId());
+        }
+
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvListChatroom.setLayoutManager(layoutManager);
-        ListChatRoomAdapter listChatRoomAdapter = new ListChatRoomAdapter(firebaseViewModel.getChatRoomList(), firebaseViewModel.getNewNotification(), this);
+        ListChatRoomAdapter listChatRoomAdapter = new ListChatRoomAdapter(firebaseViewModel.getNewNotification().getValue(), this);
         binding.rvListChatroom.setAdapter(listChatRoomAdapter);
 
-
-        firebaseViewModel.getNotifyChatRoomDataChanged().observe(requireActivity(), notify -> listChatRoomAdapter.notifyAdapter());
+        firebaseViewModel.getChatRoomList().observe(requireActivity(), list -> listChatRoomAdapter.submitList(list));
 
         return builder;
     }

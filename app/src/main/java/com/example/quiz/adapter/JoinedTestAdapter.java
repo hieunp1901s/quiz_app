@@ -1,38 +1,37 @@
 package com.example.quiz.adapter;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.quiz.R;
 import com.example.quiz.databinding.JoinListsRecyclerviewItemBinding;
-import com.example.quiz.models.TestDiffUtilCallback;
 import com.example.quiz.views.interfaces.StudentTabFragmentItemClicked;
 import com.example.quiz.models.Test;
 import com.example.quiz.util.CalculatingTimerForTest;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
 
+public class JoinedTestAdapter extends ListAdapter<Test, JoinedTestAdapter.JoinTestsViewHolder> {
+    private final StudentTabFragmentItemClicked itemClicked;
 
-public class JoinedTestAdapter extends RecyclerView.Adapter<JoinedTestAdapter.JoinTestsViewHolder> {
-    private final ArrayList<Test> joinedTest;
-    private final StudentTabFragmentItemClicked studentTabFragmentItemClicked;
-
-    public JoinedTestAdapter(ArrayList<Test> joinTests, StudentTabFragmentItemClicked studentTabFragmentItemClicked) {
-        this.joinedTest = joinTests;
-        this.studentTabFragmentItemClicked = studentTabFragmentItemClicked;
+    public JoinedTestAdapter(StudentTabFragmentItemClicked itemClicked) {
+        super(DIFF_CALLBACK);
+        this.itemClicked = itemClicked;
     }
 
-    public void updateListItem(ArrayList<Test> newList) {
-        final TestDiffUtilCallback diffUtilCallback = new TestDiffUtilCallback(this.joinedTest, newList);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
+    public static final DiffUtil.ItemCallback<Test> DIFF_CALLBACK = new DiffUtil.ItemCallback<Test>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull @NotNull Test oldItem, @NonNull @NotNull Test newItem) {
+            return oldItem.getTestID().equals(newItem.getTestID());
+        }
 
-        this.joinedTest.clear();
-        this.joinedTest.addAll(newList);
-        diffResult.dispatchUpdatesTo(this);
-    }
+        @Override
+        public boolean areContentsTheSame(@NonNull @NotNull Test oldItem, @NonNull @NotNull Test newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 
     public class JoinTestsViewHolder extends RecyclerView.ViewHolder {
         JoinListsRecyclerviewItemBinding binding;
@@ -42,23 +41,25 @@ public class JoinedTestAdapter extends RecyclerView.Adapter<JoinedTestAdapter.Jo
             this.binding = binding;
 
         }
-        public void setContent(int index) {
-            String testName = "Test name: " + joinedTest.get(index).getTestName();
-            String startTime = "Start time: " + joinedTest.get(index).getStartTime()  + " - " + joinedTest.get(index).getDate();
-            String numberOfQuestions = joinedTest.get(index).getListQuestion().size() + " questions" + " (" + joinedTest.get(index).getDuration() + " minutes)";
+
+        public void bindTo(Test test) {
+            String testName = "Test name: " + test.getTestName();
+            String startTime = "Start time: " + test.getStartTime()  + " - " + test.getDate();
+            String numberOfQuestions = test.getListQuestion().size() + " questions" + " (" + test.getDuration() + " minutes)";
 
             binding.tvTestName.setText(testName);
             binding.tvTime.setText(startTime);
             binding.tvNumberOfQuestions.setText(numberOfQuestions);
+            binding.getRoot().setOnClickListener(v -> itemClicked.onItemClicked(test));
 
-            calculatingTimerForTest = new CalculatingTimerForTest(joinedTest.get(index));
+            calculatingTimerForTest = new CalculatingTimerForTest(test);
             if (calculatingTimerForTest.getResult() > 0) {
                 binding.ivIcon.setImageResource(R.mipmap.test_icon_available);
             }
 
             binding.getRoot().setOnClickListener(v -> {
                 if (calculatingTimerForTest.getResult() > 0) {
-                    studentTabFragmentItemClicked.onItemClicked(joinedTest.get(index));
+                    itemClicked.onItemClicked(test);
                 }
                 else
                     Toast.makeText(itemView.getContext(), "not time", Toast.LENGTH_SHORT).show();
@@ -76,14 +77,7 @@ public class JoinedTestAdapter extends RecyclerView.Adapter<JoinedTestAdapter.Jo
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull JoinedTestAdapter.JoinTestsViewHolder holder, int position) {
-        holder.setContent(position);
+        holder.bindTo(getItem(position));
     }
 
-    @Override
-    public int getItemCount() {
-        if (joinedTest == null)
-            return 0;
-        else
-            return joinedTest.size();
-    }
 }
