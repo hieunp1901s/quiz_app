@@ -17,12 +17,15 @@ import android.widget.Toast;
 
 import com.example.quiz.R;
 import com.example.quiz.databinding.FragmentManageTestBinding;
+import com.example.quiz.models.Notification;
 import com.example.quiz.models.Test;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -182,6 +185,10 @@ public class ManageTestFragment extends Fragment {
                     test.setMix("false");
                 firebaseViewModel.manageTest(test);
                 Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).popBackStack();
+                Date now = Calendar.getInstance().getTime();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                String strDate = simpleDateFormat.format(now);
+                firebaseViewModel.saveNormalLog(new Notification("[" + test.getTestName() + "]" + " You changed a test info", strDate));
             }
 
             else

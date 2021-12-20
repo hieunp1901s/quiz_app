@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Test {
     private ArrayList<Question> listQuestion;
+    private ArrayList<String> studentEmailList;
     String testName;
     String startTime;
     String duration;
@@ -72,6 +73,14 @@ public class Test {
     }
 
     public String getMix() {return this.mix;}
+
+    public void setStudentEmailList(ArrayList<String> studentEmailList) {
+        this.studentEmailList = studentEmailList;
+    }
+
+    public ArrayList<String> getStudentEmailList() {
+        return studentEmailList;
+    }
 
     public void setListQuestion(ArrayList<Question> listQuestion) {
         this.listQuestion = listQuestion;

@@ -1,7 +1,9 @@
 package com.example.quiz.views.fragment;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -20,6 +22,7 @@ import com.example.quiz.adapter.QuestionNavAdapter;
 import com.example.quiz.databinding.FragmentQuestionBinding;
 import com.example.quiz.models.Answer;
 import com.example.quiz.models.CacheData;
+import com.example.quiz.models.Notification;
 import com.example.quiz.views.interfaces.QuestionFragmentItemClicked;
 import com.example.quiz.models.Test;
 import com.example.quiz.views.dialog.ExitTestConfirmDialogFragment;
@@ -113,6 +116,8 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentQuestionBinding.inflate(inflater, container, false);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#efefef"));
         
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
@@ -126,7 +131,6 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
                 questionOrder = cacheData.getQuestionOrder();
                 answerOrder = cacheData.getAnswerOrder();
                 listAnswer = cacheData.getListAnswer();
-                Log.d("cache", "is not null and test id not null");
             }
             else {
                 initRandom();
@@ -134,11 +138,9 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
                 cacheData.setTestID(test.getTestID());
                 cacheData.setAnswerOrder(answerOrder);
                 cacheData.setQuestionOrder(questionOrder);
-                Log.d("cache", "is not null and test id null");
             }
         }
         else {
-            Log.d("cache", "is null");
             initRandom();
             cacheData = new CacheData();
             cacheData.setTestID(test.getTestID());
@@ -228,6 +230,11 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
                 answer.setTimeFinish(strDate);
                 firebaseViewModel.submitAnswerToRepoFirebase(answer, test.getTestID());
                 Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_questionFragment_to_homeFragment);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Your score: " + answer.getScore());
+                builder.setTitle("Your answer has been submitted!");
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }.start();
 
@@ -288,7 +295,6 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
             answer.setTimeFinish(strDate);
             DialogFragment dialogFragment = new SubmitAnswerDialogFragment(answer);
             dialogFragment.show(getParentFragmentManager(), "submit answer");
-
         });
 
         binding.btnBack.setOnClickListener(v -> exitTest());

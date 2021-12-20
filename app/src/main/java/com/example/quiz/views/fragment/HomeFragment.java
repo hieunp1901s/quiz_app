@@ -1,9 +1,12 @@
 package com.example.quiz.views.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -16,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
+import com.example.quiz.models.User;
 import com.example.quiz.views.dialog.ChatListDialogFragment;
 import com.example.quiz.views.dialog.FindTestDialogFragment;
 import com.example.quiz.views.dialog.SessionExpiredDialogFragment;
@@ -86,95 +90,21 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+
         requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         NavHostFragment navHostFragment = (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.home_nav_host_fragment);
         NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
         BottomNavigationView bottomNav = binding.bottomNavigationView;
         NavigationUI.setupWithNavController(bottomNav, navController);
-        BadgeDrawable badgeDrawable = BadgeDrawable.create(requireContext());
-
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.studentTabFragment) {
-                binding.findTest.setVisibility(View.VISIBLE);
-            }
-            else if (destination.getId() == R.id.teacherTabFragment) {
-                binding.findTest.setVisibility(View.INVISIBLE);
-            }
-            else if (destination.getId() == R.id.accountTabFragment) {
-                binding.findTest.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        firebaseViewModel.getUserInfo().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                binding.tvUser.setText(user.getName());
-            }
-        });
-
-        firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
-            if (integer == 0) {
-                DialogFragment dialogFragment = new SessionExpiredDialogFragment();
-                dialogFragment.setCancelable(false);
-                dialogFragment.show(getParentFragmentManager(), "session expired");
-            }
-        });
-
-        binding.btnFindTest.setOnClickListener(v -> {
-            if (!binding.etFindTest.getText().toString().equals("")) {
-                firebaseViewModel.findTestFromFirebase(binding.etFindTest.getText().toString());
-            }
-        });
-
-        firebaseViewModel.getFindTestResult().observe(getViewLifecycleOwner(), test -> {
-            if (test != null) {
-                binding.etFindTest.setText("");
-                DialogFragment dialogFragment = new FindTestDialogFragment();
-                dialogFragment.setCancelable(false);
-                dialogFragment.show(getParentFragmentManager(), "find test");
-            }
-        });
-
-        firebaseViewModel.getIsFindTestResultNull().observe(getViewLifecycleOwner(), aBoolean -> {
-            if (aBoolean == null) {
-
-            }
-            else if (aBoolean) {
-                binding.tvAlert.setText("Can't find test!");
-                firebaseViewModel.getIsFindTestResultNull().setValue(null);
-            }
-
-            else {
-                binding.tvAlert.setText("Network error!");
-                firebaseViewModel.getIsFindTestResultNull().setValue(null);
-            }
-
-        });
-
-        binding.etFindTest.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.tvAlert.setText("Enter test ID");
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        BadgeDrawable badgeDrawable = BadgeDrawable.create(requireContext());
 
         binding.fabMessage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressLint("UnsafeExperimentalUsageError")
             @Override
             public void onGlobalLayout() {
-                badgeDrawable.setHorizontalOffset(50);
-                badgeDrawable.setVerticalOffset(50);
-                BadgeUtils.attachBadgeDrawable(badgeDrawable, binding.fabMessage, null);
+//                badgeDrawable.setHorizontalOffset(50);
+//                badgeDrawable.setVerticalOffset(50);
+//                BadgeUtils.attachBadgeDrawable(badgeDrawable, binding.fabMessage, null);
                 binding.fabMessage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
@@ -184,7 +114,7 @@ public class HomeFragment extends Fragment {
             dialogFragment.show(getParentFragmentManager(), "list chatroom");
         });
 
-        firebaseViewModel.getNewNotification().observe(getViewLifecycleOwner(), strings -> badgeDrawable.setNumber(strings.size()));
+//        firebaseViewModel.getNewNotification().observe(getViewLifecycleOwner(), strings -> badgeDrawable.setNumber(strings.size()));
         return binding.getRoot();
     }
 

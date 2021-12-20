@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,20 +66,21 @@ public class SplashScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
-        new CountDownTimer(3000, 1000) {
+        new CountDownTimer(2000, 1000) {
 
             public void onTick(long millisUntilFinished) {
             }
 
             public void onFinish() {
-                firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
-                    if (integer == 1) {
-                        Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_homeFragment);
-                    }
-                    else if (integer == 0) {
-                        Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_loginFragment);
-                    }
-                });
+                Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_loginFragment);
+//                firebaseViewModel.getLogInState().observe(getViewLifecycleOwner(), integer -> {
+//                    if (integer == 1) {
+//                        Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_homeFragment);
+//                    }
+//                    else if (integer == 0) {
+//                        Navigation.findNavController(requireActivity(), R.id.main_nav_host_fragment).navigate(R.id.action_splashScreenFragment_to_loginFragment);
+//                    }
+//                });
             }
         }.start();
 

@@ -1,6 +1,7 @@
 package com.example.quiz.interfaces;
 import com.example.quiz.models.Answer;
 import com.example.quiz.models.Message;
+import com.example.quiz.models.Notification;
 import com.example.quiz.models.Test;
 import com.example.quiz.models.User;
 import retrofit2.Call;
@@ -39,6 +40,12 @@ public interface FirebaseService {
     Call<Void> sendMessage(@Path("testID") String testID, @Body Message message);
 
     @PUT("/tests/{testID}.json")
-    Call<Void>  manageTest(@Path("testID") String testID, @Body Test test);
+    Call<Void> manageTest(@Path("testID") String testID, @Body Test test);
+
+    @POST("/log/{userID}/score.json")
+    Call<Void> saveScoreLog(@Path("userID") String userID, @Body Notification notification);
+
+    @POST("/log/{userID}/log.json")
+    Call<Void> saveLog(@Path("userID") String userID, @Body Notification notification);
 
 }

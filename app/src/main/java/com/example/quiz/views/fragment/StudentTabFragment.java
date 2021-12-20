@@ -1,5 +1,7 @@
 package com.example.quiz.views.fragment;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -9,12 +11,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quiz.adapter.JoinedTestAdapter;
 import com.example.quiz.databinding.FragmentStudentTabBinding;
+import com.example.quiz.models.User;
+import com.example.quiz.views.dialog.FindTestDialogFragment;
 import com.example.quiz.views.interfaces.StudentTabFragmentItemClicked;
 import com.example.quiz.models.Test;
 import com.example.quiz.views.dialog.JoinTestConfirmDialogFragment;
@@ -84,10 +90,45 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentStudentTabBinding.inflate(inflater, container, false);
-
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);
 
+
+
+        firebaseViewModel.getCheckAdmin().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer == 0) {
+                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
+                    requireActivity().getWindow().setStatusBarColor(Color.parseColor("#8B80B6"));
+                    binding.studentLayoutTrue.setVisibility(View.VISIBLE);
+                    init();
+                }
+                else if (integer == 1){
+                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    requireActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    binding.studentLayoutFalse.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
+    public void onItemClicked(Test test) {
+        this.test = test;
+        firebaseViewModel.getProgressing().setValue(true);
+        firebaseViewModel.checkIfAnswerSubmitted(test.getTestID());
+    }
+
+    public void init() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvJoinTests.setLayoutManager(layoutManager);
         JoinedTestAdapter joinedTestAdapter = new JoinedTestAdapter(this);
@@ -97,6 +138,15 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
             @Override
             public void onChanged(ArrayList<Test> tests) {
                 joinedTestAdapter.submitList(tests);
+            }
+        });
+
+        firebaseViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user!=null) {
+                    binding.tvUser.setText(user.getName());
+                }
             }
         });
 
@@ -116,19 +166,53 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
             }
         });
 
-        return binding.getRoot();
-    }
+        binding.btnFindTest.setOnClickListener(v -> {
+            if (!binding.etFindTest.getText().toString().equals("")) {
+                firebaseViewModel.findTestFromFirebase(binding.etFindTest.getText().toString());
+            }
+        });
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+        firebaseViewModel.getFindTestResult().observe(getViewLifecycleOwner(), test -> {
+            if (test != null) {
+                binding.etFindTest.setText("");
+                DialogFragment dialogFragment = new FindTestDialogFragment();
+                dialogFragment.setCancelable(false);
+                dialogFragment.show(getParentFragmentManager(), "find test");
+            }
+        });
 
-    @Override
-    public void onItemClicked(Test test) {
-        this.test = test;
-        firebaseViewModel.getProgressing().setValue(true);
-        firebaseViewModel.checkIfAnswerSubmitted(test.getTestID());
+        firebaseViewModel.getIsFindTestResultNull().observe(getViewLifecycleOwner(), aBoolean -> {
+            if (aBoolean == null) {
+
+            }
+            else if (aBoolean) {
+                binding.tvAlert.setText("Can't find test!");
+                firebaseViewModel.getIsFindTestResultNull().setValue(null);
+            }
+
+            else {
+                binding.tvAlert.setText("Network error!");
+                firebaseViewModel.getIsFindTestResultNull().setValue(null);
+            }
+
+        });
+
+        binding.etFindTest.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.tvAlert.setText("Enter test ID");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }

@@ -3,6 +3,7 @@ package com.example.quiz.views.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -86,6 +87,8 @@ public class ChatRoomFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentChatRoomBinding.inflate(getLayoutInflater());
         sharedPref = requireContext().getSharedPreferences("com.example.quiz", Context.MODE_PRIVATE);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        requireActivity().getWindow().setStatusBarColor(Color.WHITE);
 
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -149,6 +152,7 @@ public class ChatRoomFragment extends Fragment {
         String key = Objects.requireNonNull(firebaseViewModel.getCurrentChatRoom().getValue()).getId() + ".";
         int index = firebaseViewModel.getMessages().getValue().size() - 1;
         editor = sharedPref.edit();
+        if (index > -1) return;
         editor.putString(key, firebaseViewModel.getMessages().getValue().get(index).getMessage());
         editor.apply();
     }

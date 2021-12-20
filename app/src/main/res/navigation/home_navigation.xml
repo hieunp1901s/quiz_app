@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_navigation"
     app:startDestination="@id/student">
 
     <include app:graph ="@navigation/student"/>
     <include app:graph ="@navigation/teacher"/>
     <include app:graph ="@navigation/account"/>
+    <include app:graph="@navigation/notification"/>
 
 </navigation>

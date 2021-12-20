@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,14 @@ import com.example.quiz.models.Answer;
 import com.example.quiz.views.interfaces.TestResultFragmentItemClicked;
 import com.example.quiz.views.dialog.StudentAnswerInfoDialogFragment;
 import com.example.quiz.viewmodels.FirebaseViewModel;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,6 +87,58 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
 
         firebaseViewModel.getFinishGetResult().observe(getViewLifecycleOwner(), aBoolean -> {
             if (aBoolean) {
+                float min = 10;
+                float max = 0;
+                ArrayList<Answer> list = firebaseViewModel.getAnswerList();
+                float countA = 0f, countB = 0f, countC = 0f, countD = 0f, countF = 0f;
+                for (int i = 0; i < list.size(); i++) {
+                    String string = list.get(i).getScore();
+                    String[] parts = string.split("/", 2);
+                    float part1 = Float.parseFloat(parts[0]);
+                    float part2 = Float.parseFloat(parts[1]);
+                    float score = 10f * (part1 / part2) ;
+                    Log.d("score", score + "");
+
+                    if (score > max)
+                        max = score;
+                    if (score < min)
+                        min = score;
+
+                    if (score >= 8.5f)
+                        countA++;
+                    else if (score >= 7.0f)
+                        countB++;
+                    else if (score >= 5.5f)
+                        countC++;
+                    else if (score >= 4.0f)
+                        countD++;
+                    else
+                        countF++;
+                }
+
+                ArrayList data = new ArrayList();
+                data.add(new BarEntry(countA, 0));
+                data.add(new BarEntry(countB, 1));
+                data.add(new BarEntry(countC, 2));
+                data.add(new BarEntry(countD, 3));
+                data.add(new BarEntry(countF, 4));
+
+                BarDataSet dataSet = new BarDataSet(data, "Number Of Grades");
+
+                ArrayList label = new ArrayList();
+                label.add("A");
+                label.add("B");
+                label.add("C");
+                label.add("D");
+                label.add("F");
+                BarData data1 = new BarData(label, dataSet);
+                binding.barChart.setData(data1);
+                dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                binding.barChart.animateXY(2000, 2000);
+
+                binding.tvHighestScore.setText("Highest Score: " + max);
+                binding.tvLowestScore.setText("Loweset Score: " + min);
+
                 TestResultAdapter testResultAdapter = new TestResultAdapter(firebaseViewModel.getAnswerList(), TestResultFragment.this);
                 binding.rvTestResult.setAdapter(testResultAdapter);
                 firebaseViewModel.getFinishGetResult().setValue(false);
@@ -101,3 +160,6 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
         dialogFragment.show(getParentFragmentManager(), "student answer");
     }
 }
+
+
+

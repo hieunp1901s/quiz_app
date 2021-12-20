@@ -11,14 +11,17 @@ public class User {
     public String myTests;
     @SerializedName("joinTests")
     public String joinTests;
+    @SerializedName("email")
+    public String email;
 
     public User() {
     }
 
-    public User(String name, String myTests, String joinTests) {
+    public User(String name, String myTests, String joinTests, String email) {
         this.name = name;
         this.myTests = myTests;
         this.joinTests = joinTests;
+        this.email = email;
     }
 
     public String getName() {
@@ -31,5 +34,9 @@ public class User {
 
     public String getJoinTests() {
         return joinTests;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

@@ -158,12 +158,13 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                style="?android:buttonBarButtonStyle"
                 android:id="@+id/btnPrev"
+                style="?android:buttonBarButtonStyle"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/login_button_normal"
                 android:backgroundTint="#8d83b6"
                 android:elevation="2dp"
                 android:text="@string/prev"
@@ -177,6 +178,7 @@
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/login_button_normal"
                 android:backgroundTint="#8d83b6"
                 android:elevation="2dp"
                 android:text="@string/submit"
@@ -190,6 +192,7 @@
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/login_button_normal"
                 android:backgroundTint="#8d83b6"
                 android:elevation="2dp"
                 android:text="@string/next"
@@ -212,30 +215,30 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-  <LinearLayout
-      android:id="@+id/bottomSheet"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@drawable/bottom_sheet"
-      app:behavior_hideable="true"
-      android:orientation="vertical"
-      android:elevation="13dp"
-      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    <LinearLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet"
+        android:elevation="13dp"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="4dp"
-          android:layout_marginStart="160dp"
-          android:layout_marginEnd="160dp"
-          android:background="#80435C5C"
-          android:layout_marginBottom="5dp"
-          android:layout_marginTop="10dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="160dp"
+            android:layout_marginBottom="5dp"
+            android:background="#80435C5C" />
 
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/rvNavQuestion"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNavQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-  </LinearLayout>
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

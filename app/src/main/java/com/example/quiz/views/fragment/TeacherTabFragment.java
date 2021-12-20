@@ -1,5 +1,6 @@
 package com.example.quiz.views.fragment;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import com.example.quiz.adapter.MyTestAdapter;
 
 import com.example.quiz.models.Question;
+import com.example.quiz.views.dialog.SendMailDialogFragment;
 import com.example.quiz.views.interfaces.TeacherTabFragmentItemClicked;
 import com.example.quiz.models.Test;
 import com.example.quiz.databinding.FragmentTeacherTabBinding;
@@ -114,16 +116,26 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentTeacherTabBinding.inflate(inflater, container, false);
-
-        binding.button.setOnClickListener(v -> mGetContent.launch("application/excel/*"));
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        binding.rvMyTests.setLayoutManager(layoutManager);
-        MyTestAdapter myTestAdapter = new MyTestAdapter(this);
-        binding.rvMyTests.setAdapter(myTestAdapter);
+        firebaseViewModel.getCheckAdmin().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer == 0) {
+                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    requireActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    binding.teacherLayoutFalse.setVisibility(View.VISIBLE);
+                }
+                else if (integer == 1){
+                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    requireActivity().getWindow().setStatusBarColor(Color.WHITE);
+                    binding.teacherLayoutTrue.setVisibility(View.VISIBLE);
+                    init();
+                }
+            }
+        });
 
-        firebaseViewModel.getMyTestList().observe(getViewLifecycleOwner(), tests -> myTestAdapter.submitList(tests));
+
 
         return binding.getRoot();
     }
@@ -134,14 +146,35 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
         binding = null;
     }
 
+    public void init() {
+        binding.btnCreateTest.setOnClickListener(v -> mGetContent.launch("application/excel/*"));
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        binding.rvMyTests.setLayoutManager(layoutManager);
+        MyTestAdapter myTestAdapter = new MyTestAdapter(this);
+        binding.rvMyTests.setAdapter(myTestAdapter);
+
+        binding.btnSendEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendMailDialogFragment dialog = new SendMailDialogFragment();
+                dialog.show(getParentFragmentManager(), "send mail");
+            }
+        });
+        firebaseViewModel.getMyTestList().observe(getViewLifecycleOwner(), tests -> myTestAdapter.submitList(tests));
+    }
+
     public Test readExcel(String path) {
         Test test = new Test();
+
+        //read questions data
         try {
             FileInputStream excelFile = new FileInputStream(new File(path));
             Workbook workbook = new XSSFWorkbook(excelFile);
-            Sheet datatypeSheet = workbook.getSheetAt(0);
+            Iterator<Sheet> sheetIterator = workbook.sheetIterator();
+            Sheet sheet = sheetIterator.next();
+//            Sheet datatypeSheet = workbook.getSheetAt(0);
 
-            for (Row currentRow : datatypeSheet) {
+            for (Row currentRow : sheet) {
                 Iterator<Cell> cellIterator = currentRow.iterator();
                 String[] temp = {"", "", "", "", "", ""};
                 int index = 0;
@@ -152,10 +185,20 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
                 }
                 test.addQuestion(new Question(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5]));
             }
+
+            sheet = sheetIterator.next();
+            ArrayList<String> list = new ArrayList<>();
+            for (Row currentRow : sheet) { Iterator<Cell> cellIterator = currentRow.iterator();
+                while (cellIterator.hasNext()) {
+                    Cell currentCell = cellIterator.next();
+                    list.add(formatter.formatCellValue(currentCell));
+                }
+                test.setStudentEmailList(list);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return test;
     }
 
@@ -181,7 +224,7 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
         Test test = readExcel(path);
         DialogFragment dialog = new AddTestDialogFragment(fileNameFromPath(path), test);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.show(getParentFragmentManager(), "add test dialog");
         firebaseViewModel.getProgressing().setValue(false);
     }

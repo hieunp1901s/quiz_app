@@ -1,37 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.fragment.StudentTabFragment">
 
     <FrameLayout
+        android:id="@+id/studentLayoutTrue"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#efefef"/>
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvJoinTests"
-        android:layout_marginTop="70dp"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/curve_background">
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="11dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/hello"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/findTest"
+            android:layout_width="296dp"
+            android:layout_height="106dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="75dp"
+            android:background="@drawable/find_background"
+            android:elevation="2dp">
+
+            <TextView
+                android:id="@+id/tvAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/enter_test_id"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/etFindTest"
+                android:layout_width="174dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:background="#efefef"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAlert" />
+
+            <Button
+                android:id="@+id/btnFindTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="12dp"
+                android:background="#8B80B6"
+                android:text="@string/find"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.466"
+                app:layout_constraintStart_toEndOf="@+id/etFindTest"
+                app:layout_constraintTop_toBottomOf="@+id/tvAlert" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvJoinTests"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="200dp"
+            android:layout_marginBottom="50dp" />
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/studentLayoutFalse"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="200dp"
+            android:src="@drawable/ic_baseline_error" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/there_is_no_test"
-        android:visibility="gone" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/joined_tests"
-        android:textSize="18sp"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="10dp"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="325dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="You are not Student"
+            android:textSize="18sp" />
+    </FrameLayout>
 
 </FrameLayout>

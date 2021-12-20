@@ -1,6 +1,8 @@
 package com.example.quiz.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -8,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.quiz.models.Answer;
 import com.example.quiz.models.ChatRoom;
 import com.example.quiz.models.Message;
+import com.example.quiz.models.Notification;
 import com.example.quiz.models.Test;
 import com.example.quiz.models.User;
 import com.example.quiz.repositories.FirebaseRepository;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 public class FirebaseViewModel extends AndroidViewModel {
     private final FirebaseRepository firebaseRepository;
     private MutableLiveData<Test> selectedMyTest;
+
 
     public FirebaseViewModel(@NonNull @NotNull Application application) {
         super(application);
@@ -120,5 +124,19 @@ public class FirebaseViewModel extends AndroidViewModel {
 
     public void manageTest(Test test) {firebaseRepository.manageTest(test);}
 
+    public MutableLiveData<ArrayList<Notification>> getScoreLog() {
+        return firebaseRepository.getScoreLog();}
 
+    public MutableLiveData<ArrayList<Notification>> getNormalLog() {
+        return firebaseRepository.getNormalLog();}
+
+    public void saveNormalLog(Notification notification) {
+        firebaseRepository.saveNormalLog(notification);
+    }
+
+    public void saveScoreLog(Notification notification) {
+        firebaseRepository.saveScoreLog(notification);
+    }
+
+    public MutableLiveData<Integer> getCheckAdmin() {return firebaseRepository.getCheckAdmin();}
 }

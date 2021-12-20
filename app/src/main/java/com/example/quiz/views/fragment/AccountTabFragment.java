@@ -1,5 +1,6 @@
 package com.example.quiz.views.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -63,6 +64,9 @@ public class AccountTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAccountTabBinding.inflate(inflater, container, false);
+
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        requireActivity().getWindow().setStatusBarColor(0);
 
         binding.layoutLogout.setOnClickListener(v -> {
             DialogFragment dialogFragment = new ConfirmLogoutDialogFragment();

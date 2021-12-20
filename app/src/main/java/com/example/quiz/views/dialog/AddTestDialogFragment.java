@@ -15,10 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.quiz.databinding.FragmentAddTestDialogBinding;
+import com.example.quiz.models.Notification;
 import com.example.quiz.models.Test;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 import org.jetbrains.annotations.NotNull;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class AddTestDialogFragment extends DialogFragment {
@@ -134,6 +138,10 @@ public class AddTestDialogFragment extends DialogFragment {
                     test.setMix("false");
                 FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
                 firebaseViewModel.addTestFirebase(test);
+                Date now = Calendar.getInstance().getTime();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                String strDate = simpleDateFormat.format(now);
+                firebaseViewModel.saveNormalLog(new Notification("[" + test.getTestName() + "]" + " You added test successfully", strDate));
                 Objects.requireNonNull(getDialog()).dismiss();
             }
 

@@ -9,11 +9,8 @@
         android:right="-100dp"
         android:top="-80dp">
         <shape android:shape="oval">
-            <gradient
-                android:startColor="#8B80B6"
-                android:centerColor="#9288BB"
-                android:endColor="#9B91C0"
-                android:angle="0"/>
+            <solid
+                android:color="#8B80B6"/>
         </shape>
     </item>
 </layer-list>

@@ -17,11 +17,15 @@ import androidx.navigation.Navigation;
 
 import com.example.quiz.R;
 import com.example.quiz.databinding.FragmentMyTestInfoDialogBinding;
+import com.example.quiz.models.Notification;
 import com.example.quiz.models.Test;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class MyTestInfoDialogFragment extends DialogFragment {
@@ -57,6 +61,10 @@ public class MyTestInfoDialogFragment extends DialogFragment {
         binding.btnDelete.setOnClickListener(v -> {
             firebaseViewModel.deleteTest(test.getTestID());
             Objects.requireNonNull(getDialog()).dismiss();
+            Date now = Calendar.getInstance().getTime();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String strDate = simpleDateFormat.format(now);
+            firebaseViewModel.saveNormalLog(new Notification("[" + test.getTestName() + "]" + " You deleted a test", strDate));
         });
 
         binding.btnManage.setOnClickListener(v -> {

@@ -12,12 +12,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.quiz.databinding.FragmentJoinConfirmDialogBinding;
+import com.example.quiz.models.Notification;
 import com.example.quiz.models.Test;
 import com.example.quiz.util.CalculatingTimerForTest;
 import com.example.quiz.viewmodels.FirebaseViewModel;
 import com.example.quiz.viewmodels.QuestionViewModel;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class JoinTestConfirmDialogFragment extends DialogFragment {
@@ -53,6 +58,10 @@ public class JoinTestConfirmDialogFragment extends DialogFragment {
                 questionViewModel.getParticipantName().setValue(binding.etName.getText().toString());
                 questionViewModel.getCancelTimer().setValue(false);
                 Objects.requireNonNull(getDialog()).dismiss();
+                Date now = Calendar.getInstance().getTime();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                String strDate = simpleDateFormat.format(now);
+                firebaseViewModel.saveNormalLog(new Notification("[" + test.getTestName() + "]" + " You started a test", strDate));
 
             }
             else {

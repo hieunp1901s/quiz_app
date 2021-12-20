@@ -18,6 +18,7 @@ import com.example.quiz.models.Answer;
 import com.example.quiz.models.ChatRoom;
 import com.example.quiz.interfaces.FirebaseService;
 import com.example.quiz.models.Message;
+import com.example.quiz.models.Notification;
 import com.example.quiz.models.Test;
 import com.example.quiz.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import retrofit2.Call;
@@ -104,6 +106,14 @@ public class FirebaseRepository {
     long messageCount = 0;
     MutableLiveData<ArrayList<ChatRoom>> chatRoomList;
 
+    //log
+    MutableLiveData<ArrayList<Notification>> scoreLog;
+    MutableLiveData<ArrayList<Notification>> normalLog;
+    ValueEventListener scoreLogListener;
+    ValueEventListener normalLogListener;
+    final String ADMIN = "hieunp62@wru.vn";
+    MutableLiveData<Integer> checkAdmin;
+
     public FirebaseRepository(Application application) {
         this.application = application;
         initData();
@@ -120,8 +130,9 @@ public class FirebaseRepository {
                         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
                         String myTest = root.child("lists").push().getKey();
                         String joinedTest = root.child("lists").push().getKey();
-                        User newUser = new User(userName, myTest, joinedTest);
+                        User newUser = new User(userName, myTest, joinedTest, email);
                         addUserFirebase(user.getUid(), newUser);
+                        getUserInfoFirebase();
                         userInfo.setValue(newUser);
                         logInState.setValue(LOG_IN_STATE_LOG_IN);
                         progressing.setValue(false);
@@ -138,8 +149,13 @@ public class FirebaseRepository {
                 .addOnCompleteListener(application.getMainExecutor(), task -> {
                     if (task.isSuccessful()) {
                         user = firebaseAuth.getCurrentUser();
+                        getUserInfoFirebase();
                         logInState.setValue(LOG_IN_STATE_LOG_IN);
                         progressing.setValue(false);
+                        if (email.equals(ADMIN))
+                            checkAdmin.setValue(1);
+                        else
+                            checkAdmin.setValue(0);
                     }
                     else {
                         progressing.setValue(false);
@@ -171,6 +187,9 @@ public class FirebaseRepository {
         firebaseAuth.signOut();
         logInState.setValue(LOG_IN_STATE_LOG_OUT);
         userInfo.postValue(null);
+        normalLog.getValue().clear();
+        scoreLog.getValue().clear();
+        checkAdmin.setValue(2);
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -202,6 +221,12 @@ public class FirebaseRepository {
         chatRoomList = new MutableLiveData<>();
         chatRoomList.setValue(new ArrayList<>());
         currentChatRoom = new MutableLiveData<>();
+        scoreLog = new MutableLiveData<>();
+        scoreLog.setValue(new ArrayList<>());
+        normalLog = new MutableLiveData<>();
+        normalLog.setValue(new ArrayList<>());
+        checkAdmin = new MutableLiveData<>();
+        checkAdmin.setValue(2);
     }
 
     private void initValueEventListener() {
@@ -428,6 +453,42 @@ public class FirebaseRepository {
 
             }
         };
+
+        scoreLogListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    ArrayList<Notification> list = new ArrayList<>();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        list.add(dataSnapshot.getValue(Notification.class));
+                    }
+                    scoreLog.setValue(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        };
+
+        normalLogListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    ArrayList<Notification> list = new ArrayList<>();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        list.add(dataSnapshot.getValue(Notification.class));
+                    }
+                    normalLog.setValue(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        };
     }
 
     private void initRetrofit() {
@@ -439,41 +500,45 @@ public class FirebaseRepository {
     }
 
     private void initFirebaseAuth() {
-        FirebaseAuth.AuthStateListener authStateListener = firebaseAuth -> {
-            if (firebaseAuth.getCurrentUser() != null){
-                user = firebaseAuth.getCurrentUser();
-
-                boolean loop = true;
-                while (loop) {// wait for retrofit service build complete
-                    if (service != null) {
-                        if (user != null && userInfo.getValue() == null) {
-                            getUserInfoFirebase();
-                        }
-                        loop = false;
-                    }
-                }
-
-                logInState.postValue(1);
-            }
-            else {
-                logInState.postValue(0);
-            }
-        };
+//        FirebaseAuth.AuthStateListener authStateListener = firebaseAuth -> {
+//            if (firebaseAuth.getCurrentUser() != null){
+//                user = firebaseAuth.getCurrentUser();
+//
+//                boolean loop = true;
+//                while (loop) {// wait for retrofit service build complete
+//                    if (service != null) {
+//                        if (user != null && userInfo.getValue() == null) {
+//                            getUserInfoFirebase();
+//                        }
+//                        loop = false;
+//                    }
+//                }
+//
+//                logInState.postValue(1);
+//            }
+//            else {
+//                logInState.postValue(0);
+//            }
+//        };
 
         //Init and attach
         this.firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.addAuthStateListener(authStateListener);
+        firebaseAuth.signOut();
     }
 
     private void addValueListenerToRepositories() {
         //Add value listener to the node
         databaseReference.child("repositories").child(Objects.requireNonNull(userInfo.getValue()).getJoinTests()).addValueEventListener(joinedTestRepoListener);
         databaseReference.child("repositories").child(userInfo.getValue().getMyTests()).addValueEventListener(myTestRepoListener);
+        databaseReference.child("log").child(user.getUid()).child("score").addValueEventListener(scoreLogListener);
+        databaseReference.child("log").child(user.getUid()).child("log").addValueEventListener(normalLogListener);
     }
 
     private void removeValueListenerToRepositories() {
         databaseReference.child("repositories").child(Objects.requireNonNull(userInfo.getValue()).getJoinTests()).removeEventListener(joinedTestRepoListener);
         databaseReference.child("repositories").child(userInfo.getValue().getMyTests()).removeEventListener(myTestRepoListener);
+        databaseReference.child("log").child(user.getUid()).child("score").removeEventListener(scoreLogListener);
+        databaseReference.child("log").child(user.getUid()).child("log").removeEventListener(normalLogListener);
     }
 
     private void addAllListeners(int flag) {
@@ -608,7 +673,6 @@ public class FirebaseRepository {
         call.enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
-                Log.d("creating chat room success", "onResponse: ");
             }
 
             @Override
@@ -761,6 +825,12 @@ public class FirebaseRepository {
 
     public MutableLiveData<ArrayList<ChatRoom>> getChatRoomList() {return chatRoomList;}
 
+    public MutableLiveData<ArrayList<Notification>> getScoreLog() {return scoreLog;}
+
+    public MutableLiveData<ArrayList<Notification>> getNormalLog() {return normalLog;}
+
+    public MutableLiveData<Integer> getCheckAdmin() {return checkAdmin;}
+
 
     private synchronized void addAlarm(Test test) {
         requestCodeCount = sharedPref.getInt("request code", 0);
@@ -836,6 +906,36 @@ public class FirebaseRepository {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull Throwable t) {
+
+            }
+        });
+    }
+
+    public void saveScoreLog(Notification notification) {
+        Call call = service.saveScoreLog(user.getUid(), notification);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void saveNormalLog(Notification notification) {
+        Call call = service.saveLog(user.getUid(), notification);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
 
             }
         });

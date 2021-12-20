@@ -8,7 +8,6 @@ import android.view.Window;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,7 +50,7 @@ public class ChatListDialogFragment extends DialogFragment implements ChatListDi
         ListChatRoomAdapter listChatRoomAdapter = new ListChatRoomAdapter(firebaseViewModel.getNewNotification().getValue(), this);
         binding.rvListChatroom.setAdapter(listChatRoomAdapter);
 
-        firebaseViewModel.getChatRoomList().observe(requireActivity(), list -> listChatRoomAdapter.submitList(list));
+        firebaseViewModel.getChatRoomList().observe(this, list -> listChatRoomAdapter.submitList(list));
 
         return builder;
     }
