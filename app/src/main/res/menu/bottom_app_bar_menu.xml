@@ -23,6 +23,5 @@
         app:showAsAction="always"/>
 
     <item android:id="@+id/image"
-        android:title="Image"
         app:showAsAction="always"/>
 </menu>

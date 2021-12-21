@@ -16,6 +16,7 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/home_navigation" />
 
+
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
@@ -32,12 +33,12 @@
         app:layout_anchorGravity="bottom|center">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            app:labelVisibilityMode="labeled"
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_nav"
             app:itemIconTint="@drawable/bottom_nav_icon_color_selector"
-
             app:menu="@menu/bottom_app_bar_menu" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>

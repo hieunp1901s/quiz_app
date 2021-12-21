@@ -1,5 +1,6 @@
 package com.example.quiz.views.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -80,7 +81,8 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
-
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        requireActivity().getWindow().setStatusBarColor(0);
         binding = FragmentTestResultBinding.inflate(getLayoutInflater());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvTestResult.setLayoutManager(layoutManager);
@@ -137,7 +139,7 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
                 binding.barChart.animateXY(2000, 2000);
 
                 binding.tvHighestScore.setText("Highest Score: " + max);
-                binding.tvLowestScore.setText("Loweset Score: " + min);
+                binding.tvLowestScore.setText("Lowest Score: " + min);
 
                 TestResultAdapter testResultAdapter = new TestResultAdapter(firebaseViewModel.getAnswerList(), TestResultFragment.this);
                 binding.rvTestResult.setAdapter(testResultAdapter);

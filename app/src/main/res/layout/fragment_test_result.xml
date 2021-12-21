@@ -12,10 +12,21 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center_horizontal"
+            android:text="SCORING CHART"
+            android:textSize="18sp" />
+
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barChart"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="250dp"
+            android:layout_marginTop="20dp">
 
         </com.github.mikephil.charting.charts.BarChart>
 
@@ -23,18 +34,32 @@
             android:id="@+id/tvHighestScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tvLowestScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:fontFamily="sans-serif-medium"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center_horizontal"
+            android:text="STUDENT RESULT LIST"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="#74708e"
             android:orientation="horizontal">
 
