@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#151718 "
     tools:context=".views.fragment.StudentTabFragment">
 
     <FrameLayout
@@ -55,7 +56,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/enter_test_id"
+                android:textColor="#ececec "
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,7 +68,7 @@
                 android:layout_height="45dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
-                android:background="#efefef"
+                android:background="@drawable/alert_dialog"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:paddingStart="5dp"
@@ -81,9 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="12dp"
-                android:background="#8B80B6"
+                android:background="@drawable/find_button_bg"
                 android:text="@string/find"
-                android:textColor="@color/white"
+                android:textColor="#129961 "
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.466"
@@ -115,7 +118,8 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="200dp"
-            android:src="@drawable/ic_baseline_error" />
+            android:src="@drawable/ic_baseline_error"
+            app:tint="#ececec" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -124,6 +128,7 @@
             android:layout_marginTop="325dp"
             android:fontFamily="sans-serif-medium"
             android:text="You are not Student"
+            android:textColor="#ececec "
             android:textSize="18sp" />
     </FrameLayout>
 

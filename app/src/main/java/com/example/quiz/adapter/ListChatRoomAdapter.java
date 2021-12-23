@@ -51,8 +51,8 @@ public class ListChatRoomAdapter extends ListAdapter<ChatRoom, ListChatRoomAdapt
             //change view if have notification
             for (int i = 0; i < notificationList.size(); i++)
                 if (chatRoom.getId().equals(notificationList.get(i))) {
-                    binding.tvRoomName.setTextColor(Color.parseColor("#000000"));
-                    binding.tvLastMessage.setTextColor(Color.parseColor("#000000"));
+                    binding.tvRoomName.setTextColor(Color.parseColor("#FFFFFF"));
+                    binding.tvLastMessage.setTextColor(Color.parseColor("#FFFFFF"));
                     binding.tvRoomName.setTypeface(null, Typeface.BOLD);
                     binding.tvLastMessage.setTypeface(null, Typeface.BOLD);
                     break;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#151718 "
     android:fitsSystemWindows="true"
     tools:context=".views.fragment.ChatRoomFragment">
 
@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="50dp"
         android:layout_weight="10"
-        android:background="#FFFFFF"
+        android:background="#151718 "
         android:windowSoftInputMode="adjustResize"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
-        app:backgroundTint="@color/white"
         android:windowSoftInputMode="adjustResize"
+        app:backgroundTint="#151718 "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -41,16 +41,16 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="65dp"
-            android:hint="@string/aa"
-            android:textColorHint="@color/teal_700"
             android:background="@drawable/message_background"
             android:ems="10"
+            android:hint="@string/aa"
             android:inputType="textPersonName"
             android:paddingLeft="12dp"
             android:paddingTop="8dp"
             android:paddingRight="12dp"
             android:paddingBottom="8dp"
             android:textColor="@color/black"
+            android:textColorHint="@color/teal_700"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.079"
@@ -63,13 +63,13 @@
             android:layout_gravity="end"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/ic_baseline_send"
             android:background="@android:color/transparent"
+            android:src="@drawable/ic_baseline_send"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.721"
             app:layout_constraintStart_toEndOf="@+id/etMessage"
-            app:tint="#74708e"/>
+            app:tint="#74708e" />
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
@@ -78,7 +78,7 @@
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white"
+        android:background="#151718 "
         android:elevation="10dp"
         android:orientation="horizontal"
         android:windowSoftInputMode="adjustPan"
@@ -94,7 +94,7 @@
             android:elevation="2dp"
             android:src="@drawable/ic_back"
             android:visibility="visible"
-            app:tint="#74708e" />
+            app:tint="#4943fa" />
 
         <TextView
             android:id="@+id/tvRoom"

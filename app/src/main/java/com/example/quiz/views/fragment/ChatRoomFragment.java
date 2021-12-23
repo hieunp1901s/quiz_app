@@ -90,6 +90,9 @@ public class ChatRoomFragment extends Fragment {
         requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         requireActivity().getWindow().setStatusBarColor(Color.WHITE);
 
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#151718"));
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
+
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 

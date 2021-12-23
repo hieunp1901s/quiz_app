@@ -117,18 +117,15 @@ public class TeacherTabFragment extends Fragment  implements PickiTCallbacks, Te
         // Inflate the layout for this fragment
         binding = FragmentTeacherTabBinding.inflate(inflater, container, false);
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
-
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#151718"));
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
         firebaseViewModel.getCheckAdmin().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 if (integer == 0) {
-                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                    requireActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
                     binding.teacherLayoutFalse.setVisibility(View.VISIBLE);
                 }
                 else if (integer == 1){
-                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                    requireActivity().getWindow().setStatusBarColor(Color.WHITE);
                     binding.teacherLayoutTrue.setVisibility(View.VISIBLE);
                     init();
                 }

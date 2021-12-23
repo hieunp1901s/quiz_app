@@ -65,8 +65,8 @@ public class AccountTabFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentAccountTabBinding.inflate(inflater, container, false);
 
-        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        requireActivity().getWindow().setStatusBarColor(0);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#151718"));
 
         binding.layoutLogout.setOnClickListener(v -> {
             DialogFragment dialogFragment = new ConfirmLogoutDialogFragment();

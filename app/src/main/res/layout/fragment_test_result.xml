@@ -4,46 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.fragment.TestResultFragment"
-    android:fitsSystemWindows="true">
+    android:background="#151718 "
+    android:fitsSystemWindows="true"
+    tools:context=".views.fragment.TestResultFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <TextView
-            android:id="@+id/textView4"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center_horizontal"
+                android:text="SCORING CHART"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="20dp">
+
+            </com.github.mikephil.charting.charts.BarChart>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/tvLowestScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvHighestScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
             android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif-black"
-            android:gravity="center_horizontal"
-            android:text="SCORING CHART"
-            android:textSize="18sp" />
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_marginTop="20dp">
-
-        </com.github.mikephil.charting.charts.BarChart>
-
-        <TextView
-            android:id="@+id/tvHighestScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tvLowestScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="16sp" />
+            android:background="#31353e" />
 
         <TextView
             android:id="@+id/textView22"
@@ -53,6 +75,7 @@
             android:fontFamily="sans-serif-black"
             android:gravity="center_horizontal"
             android:text="STUDENT RESULT LIST"
+            android:textColor="@color/white"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -118,6 +141,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTestResult"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

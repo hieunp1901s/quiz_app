@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:layout_margin="10dp"
-    android:background="@drawable/alert_dialog"
-    android:elevation="2dp">
+    android:background="@drawable/test_bg"
+    android:elevation="2dp"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/ivIcon"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:layout_margin="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp"
-        app:srcCompat="@mipmap/test_icon_not_available"/>
+        app:srcCompat="@mipmap/test_icon_not_available" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_margin="10dp"
         android:layout_weight="3"
-        android:layout_margin="10dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvTestName"
@@ -31,6 +31,7 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:text="something"
+            android:textColor="#ececec "
             android:textSize="16sp" />
 
         <TextView
@@ -40,6 +41,7 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-light"
             android:text="something"
+            android:textColor="#999999 "
             android:textSize="12sp" />
 
         <TextView
@@ -49,10 +51,10 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-light"
             android:text="something"
+            android:textColor="#999999 "
             android:textSize="12sp" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

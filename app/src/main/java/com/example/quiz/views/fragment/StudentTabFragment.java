@@ -99,14 +99,14 @@ public class StudentTabFragment extends Fragment implements StudentTabFragmentIt
             @Override
             public void onChanged(Integer integer) {
                 if (integer == 0) {
-                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
-                    requireActivity().getWindow().setStatusBarColor(Color.parseColor("#8B80B6"));
+                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                    requireActivity().getWindow().setStatusBarColor(Color.parseColor("#2d87ff"));
                     binding.studentLayoutTrue.setVisibility(View.VISIBLE);
                     init();
                 }
                 else if (integer == 1){
-                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                    requireActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
+                    requireActivity().getWindow().setStatusBarColor(Color.parseColor("#151718"));
                     binding.studentLayoutFalse.setVisibility(View.VISIBLE);
                 }
             }

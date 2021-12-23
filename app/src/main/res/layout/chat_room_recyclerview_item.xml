@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:background="#151718 "
     android:orientation="vertical">
 
     <TextView
@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
-        android:background="@color/white"
         android:textColor="#B374708E"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMessageContent" />
@@ -23,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_marginStart="5dp"
-        android:background="@color/white"
-        android:textColor="#B374708E"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +38,7 @@
         android:paddingTop="8dp"
         android:paddingEnd="12dp"
         android:paddingBottom="8dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvName" />
 

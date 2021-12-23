@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".views.fragment.TeacherTabFragment"
-    android:background="@drawable/bottom_sheet">
+    android:background="@drawable/background">
 
     <FrameLayout
         android:id="@+id/teacherLayoutTrue"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -21,62 +21,69 @@
             android:orientation="horizontal">
 
             <FrameLayout
-                android:id="@+id/btnCreateTest"
-                android:layout_width="100dp"
-                android:layout_height="125dp"
-                android:layout_marginStart="60dp"
-                android:background="@drawable/create_button_background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:src="@drawable/ic_baseline_add_circle_"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="75dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Create test"
-                    android:textColor="@color/white" />
-
-            </FrameLayout>
-
-            <FrameLayout
                 android:id="@+id/btnSendEmail"
-                android:layout_width="100dp"
-                android:layout_height="125dp"
-                android:layout_marginEnd="60dp"
-                android:background="@drawable/send_mail_button_background"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="108dp"
+                android:background="@drawable/teacher_button_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/imageView7"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_baseline_email"
-                    app:tint="@color/white" />
+                    app:tint="@android:color/holo_green_light" />
 
-                <TextView
-                    android:id="@+id/textView21"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="75dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Send email"
-                    android:textColor="@color/white" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="92dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Create test"
+                android:textColor="#ececec "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnCreateTest" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="96dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Send email"
+                android:textColor="#ececec "
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSendEmail" />
+
+            <FrameLayout
+                android:id="@+id/btnCreateTest"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/teacher_button_bg"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_baseline_add_circle_"
+                    app:tint="@android:color/holo_red_dark" />
+
             </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -87,21 +94,11 @@
             android:layout_marginTop="175dp"
             android:background="@drawable/teacher_tab_background">
 
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="20dp"
-                android:fontFamily="sans-serif-black"
-                android:text="ALL TESTS"
-                android:textSize="18sp" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMyTests"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="50dp" />
+                android:layout_marginTop="30dp" />
         </FrameLayout>
 
     </FrameLayout>
@@ -110,7 +107,7 @@
         android:id="@+id/teacherLayoutFalse"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#efefef"
+        android:background="@drawable/background"
         android:visibility="gone">
 
         <ImageView
@@ -118,7 +115,8 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="200dp"
-            android:src="@drawable/ic_baseline_error" />
+            android:src="@drawable/ic_baseline_error"
+            app:tint="#ececec" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -127,6 +125,7 @@
             android:layout_marginTop="325dp"
             android:fontFamily="sans-serif-medium"
             android:text="You are not teacher"
+            android:textColor="#ececec"
             android:textSize="18sp" />
     </FrameLayout>
 

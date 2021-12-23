@@ -45,7 +45,7 @@ public class ChatRoomAdapter extends ListAdapter<Message, ChatRoomAdapter.ChatRo
         public void init(Message message) {
             binding.getRoot().setGravity(Gravity.START);
             binding.tvMessageContent.setBackgroundResource(R.drawable.message_background);
-            binding.tvMessageContent.setTextColor(Color.parseColor("#000000"));
+            binding.tvMessageContent.setTextColor(Color.parseColor("#ececec"));
             binding.tvName.setText(message.getUser());
             binding.tvMessageContent.setText(message.getMessage());
             binding.tvTimeSend.setText(message.getTime());
@@ -58,7 +58,7 @@ public class ChatRoomAdapter extends ListAdapter<Message, ChatRoomAdapter.ChatRo
             if (message.getUserId().equals(userID)) {
                 binding.getRoot().setGravity(Gravity.END);
                 binding.tvMessageContent.setBackgroundResource(R.drawable.my_message_background);
-                binding.tvMessageContent.setTextColor(Color.parseColor("#FFFFFF"));
+                binding.tvMessageContent.setTextColor(Color.parseColor("#ececec"));
                 binding.tvName.setVisibility(View.GONE);
             }
 

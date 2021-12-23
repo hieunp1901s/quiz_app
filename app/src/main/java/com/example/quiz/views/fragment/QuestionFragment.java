@@ -116,8 +116,8 @@ public class QuestionFragment extends Fragment implements QuestionFragmentItemCl
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentQuestionBinding.inflate(inflater, container, false);
-        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#efefef"));
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#151718"));
         
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         questionViewModel = new ViewModelProvider(requireActivity()).get(QuestionViewModel.class);

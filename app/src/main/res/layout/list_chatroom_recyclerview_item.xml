@@ -3,20 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:layout_marginBottom="20dp"
-    android:background="#FFFFFF">
+    android:layout_marginBottom="20dp">
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="10dp"
-        app:tint="#634F4F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_baseline_chatroom" />
+        app:srcCompat="@drawable/ic_baseline_chatroom"
+        app:tint="#ececec" />
 
     <TextView
         android:id="@+id/tvRoomName"
@@ -26,6 +25,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:fontFamily="sans-serif"
+        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.036"
@@ -41,6 +41,7 @@
         android:layout_marginEnd="20dp"
         android:fontFamily="sans-serif"
         android:maxLines="1"
+        android:textColor="#ececec "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/tvRoomName" />

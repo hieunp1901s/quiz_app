@@ -1,5 +1,6 @@
 package com.example.quiz.views.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -73,6 +74,9 @@ public class LoginRegisterFragment extends Fragment{
 
         firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         binding = FragmentLoginRegisterBinding.inflate(getLayoutInflater());
+
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#101112"));
 
         firebaseViewModel.getLogInState().setValue(0);
 

@@ -3,6 +3,7 @@ package com.example.quiz.views.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,20 +15,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import com.example.quiz.adapter.TestResultAdapter;
 import com.example.quiz.databinding.FragmentTestResultBinding;
 import com.example.quiz.models.Answer;
 import com.example.quiz.views.interfaces.TestResultFragmentItemClicked;
 import com.example.quiz.views.dialog.StudentAnswerInfoDialogFragment;
 import com.example.quiz.viewmodels.FirebaseViewModel;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import org.apache.poi.ss.formula.functions.Column;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,8 +91,8 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
-        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        requireActivity().getWindow().setStatusBarColor(0);
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#151718"));
         binding = FragmentTestResultBinding.inflate(getLayoutInflater());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvTestResult.setLayoutManager(layoutManager);
@@ -99,7 +109,6 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
                     float part1 = Float.parseFloat(parts[0]);
                     float part2 = Float.parseFloat(parts[1]);
                     float score = 10f * (part1 / part2) ;
-                    Log.d("score", score + "");
 
                     if (score > max)
                         max = score;
@@ -118,26 +127,95 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
                         countF++;
                 }
 
-                ArrayList data = new ArrayList();
-                data.add(new BarEntry(countA, 0));
-                data.add(new BarEntry(countB, 1));
-                data.add(new BarEntry(countC, 2));
-                data.add(new BarEntry(countD, 3));
-                data.add(new BarEntry(countF, 4));
+                //Barchart
+                ArrayList numberOfGrade = new ArrayList();
+                numberOfGrade.add(new BarEntry(countA, 0));
+                numberOfGrade.add(new BarEntry(countB, 1));
+                numberOfGrade.add(new BarEntry(countC, 2));
+                numberOfGrade.add(new BarEntry(countD, 3));
+                numberOfGrade.add(new BarEntry(countF, 4));
 
-                BarDataSet dataSet = new BarDataSet(data, "Number Of Grades");
 
-                ArrayList label = new ArrayList();
-                label.add("A");
-                label.add("B");
-                label.add("C");
-                label.add("D");
-                label.add("F");
-                BarData data1 = new BarData(label, dataSet);
-                binding.barChart.setData(data1);
-                dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-                binding.barChart.animateXY(2000, 2000);
 
+                ArrayList barLabel = new ArrayList();
+                barLabel.add("A");
+                barLabel.add("B");
+                barLabel.add("C");
+                barLabel.add("D");
+                barLabel.add("F");
+
+                List<Integer> barColor = new ArrayList<>();
+                barColor.add(Color.RED);
+                barColor.add(Color.GREEN);
+                barColor.add(Color.BLUE);
+                barColor.add(Color.MAGENTA);
+                barColor.add(Color.GRAY);
+
+                BarDataSet dataSet = new BarDataSet(numberOfGrade, "Grade");
+                binding.barChart.animateY(5000);
+                BarData data = new BarData(barLabel, dataSet);
+                dataSet.setColors(barColor);
+                binding.barChart.setData(data);
+                binding.barChart.getXAxis().setTextColor(Color.WHITE);
+                binding.barChart.getAxisLeft().setTextColor(Color.WHITE);
+                binding.barChart.getAxisRight().setTextColor(Color.WHITE);// left y-axis
+                binding.barChart.getXAxis().setTextColor(Color.WHITE);
+                binding.barChart.getLegend().setTextColor(Color.WHITE);
+                binding.barChart.getBarData().setValueTextColor(Color.WHITE);
+
+                binding.barChart.getLegend().setComputedColors(barColor);
+                dataSet.setValueTextSize(12f);
+
+
+                //Piechart
+                ArrayList pie = new ArrayList();
+                ArrayList pieLabel = new ArrayList();
+                List<Integer> colors = new ArrayList<>();
+                List<String> legendLabel = new ArrayList<>();
+                int index = 0;
+                if (countA > 0) {
+                    pieLabel.add("A");
+                    pie.add(new Entry(countA, index));
+                    colors.add(Color.RED);
+                    index++;
+                }
+                if (countB > 0) {
+                    pieLabel.add("B");
+                    pie.add(new Entry(countB, index));
+                    colors.add(Color.GREEN);
+                    index++;
+                }
+                if (countC > 0) {
+                    pieLabel.add("C");
+                    pie.add(new Entry(countC, index));
+                    colors.add(Color.BLUE);
+                    index++;
+                }
+
+                if (countD > 0) {
+                    pieLabel.add("D");
+                    pie.add(new Entry(countD, index));
+                    colors.add(Color.MAGENTA);
+                    index++;
+                }
+
+                if (countF > 0) {
+                    pieLabel.add("F");
+                    pie.add(new Entry(countF, index));
+                    colors.add(Color.GRAY);
+                    index++;
+                }
+
+                PieDataSet pieDataSet  = new PieDataSet(pie, "Grade");
+                binding.pieChart.animateY(5000);
+                PieData pieData = new PieData(pieLabel, pieDataSet);;
+                pieData.setValueFormatter(new PercentFormatter());
+                binding.pieChart.setData(pieData);
+                binding.pieChart.getLegend().setTextColor(Color.WHITE);
+                binding.pieChart.getData().setValueTextColor(Color.WHITE);
+                binding.pieChart.getLegend().setEnabled(false);
+                pieDataSet.setColors(colors);
+                pieDataSet.setValueTextSize(12f);
                 binding.tvHighestScore.setText("Highest Score: " + max);
                 binding.tvLowestScore.setText("Lowest Score: " + min);
 

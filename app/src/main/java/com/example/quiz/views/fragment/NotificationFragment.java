@@ -78,7 +78,7 @@ public class NotificationFragment extends Fragment {
 
         FirebaseViewModel firebaseViewModel = new ViewModelProvider(requireActivity()).get(FirebaseViewModel.class);
         requireActivity().getWindow().getDecorView().setSystemUiVisibility(0);
-        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#8B80B6"));
+        requireActivity().getWindow().setStatusBarColor(Color.parseColor("#2d87ff"));
         binding = FragmentNotificationBinding.inflate(getLayoutInflater());
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Test score"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Log"));
