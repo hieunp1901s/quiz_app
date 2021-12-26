@@ -173,7 +173,7 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
                 List<Integer> colors = new ArrayList<>();
                 List<String> legendLabel = new ArrayList<>();
                 int index = 0;
-                float total = countA + countB + countC + countD;
+                float total = countA + countB + countC + countD + countF;
                 if (countA > 0) {
                     pieLabel.add("A");
                     pie.add(new Entry(countA / total * 100, index));
