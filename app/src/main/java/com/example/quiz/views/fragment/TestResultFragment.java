@@ -173,35 +173,36 @@ public class TestResultFragment extends Fragment implements TestResultFragmentIt
                 List<Integer> colors = new ArrayList<>();
                 List<String> legendLabel = new ArrayList<>();
                 int index = 0;
+                float total = countA + countB + countC + countD;
                 if (countA > 0) {
                     pieLabel.add("A");
-                    pie.add(new Entry(countA, index));
+                    pie.add(new Entry(countA / total * 100, index));
                     colors.add(Color.RED);
                     index++;
                 }
                 if (countB > 0) {
                     pieLabel.add("B");
-                    pie.add(new Entry(countB, index));
+                    pie.add(new Entry(countB/ total * 100, index));
                     colors.add(Color.GREEN);
                     index++;
                 }
                 if (countC > 0) {
                     pieLabel.add("C");
-                    pie.add(new Entry(countC, index));
+                    pie.add(new Entry(countC/ total * 100, index));
                     colors.add(Color.BLUE);
                     index++;
                 }
 
                 if (countD > 0) {
                     pieLabel.add("D");
-                    pie.add(new Entry(countD, index));
+                    pie.add(new Entry(countD/ total *100, index));
                     colors.add(Color.MAGENTA);
                     index++;
                 }
 
                 if (countF > 0) {
                     pieLabel.add("F");
-                    pie.add(new Entry(countF, index));
+                    pie.add(new Entry(countF/ total * 100, index));
                     colors.add(Color.GRAY);
                     index++;
                 }
